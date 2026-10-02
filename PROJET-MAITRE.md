@@ -18,7 +18,7 @@ puis commit et push dans la foulée.
 | 1 | Cadrage : qui saisit, qui consulte, où ça vit | Fait (02/10/2026) |
 | 2 | Maquette visuelle (vue mois, vue année) | Faite ; Franck demande la construction complète |
 | 3 | Construction de l'outil (`site/`) | Fait, essayé sur le Mac (02/10/2026) |
-| 4 | Mise en ligne sur planning.drfranckmoyal.fr | **En service** (02/10/2026), relié au portail CEMEDIS Formations |
+| 4 | Mise en ligne sur planning.drfranckmoyal.fr | **En service** sur le portail CEMEDIS (`/planeo/`, mot de passe DFM) depuis le 02/10/2026 |
 
 ## Cahier des charges initial (Franck, 02/10/2026)
 
@@ -67,6 +67,12 @@ puis commit et push dans la foulée.
   ouvre planning.drfranckmoyal.fr. Planéo reste chez Hostinger avec son mot de passe propre (choix de
   Franck, contre un déménagement sur le serveur DFM). Lien « Portail CEMEDIS » en bas de Planéo, pour
   l'administrateur seulement.
+- D18 (02/10) **Un seul mot de passe pour tout le portail** (demande de Franck) : Planéo déménage
+  sur le serveur du portail, sous https://163-172-8-49.nip.io/planeo/, et utilise la connexion de DFM
+  (même cookie, même hôte). Plus de mot de passe propre à Planéo. La page du portail elle-même est
+  fermée derrière cette connexion. La connexion dure une journée de travail (réglage DFM).
+  L'ancienne adresse planning.drfranckmoyal.fr renvoie vers la nouvelle. Version PHP (`site/`)
+  gardée en archive. Notice serveur : `deploiement/LISEZ-MOI.md`.
 - D14 (02/10) Un chevauchement apparaît en deux couleurs, entouré de rouge.
 
 ## Questions ouvertes
@@ -148,3 +154,9 @@ sous-domaine, « Extract » avec `.` et « Overwrite existing files », puis met
 - Aucune donnée personnelle de stagiaires dans le planning ni dans le dépôt.
 - Rien de secret (mot de passe, clé) dans le dépôt.
 - Le contenu en ligne de `donnees/` (planning, empreinte du mot de passe) n'est ni copié dans le dépôt ni écrasé.
+
+- **02/10/2026** — D18 : Planéo installé sur le serveur du portail (service `planeo`, port 5003),
+  données reprises (version 6, identiques à Hostinger), nginx réglé (copie de l'ancien réglage gardée),
+  portail fermé derrière la connexion DFM, carte Planéo pointant vers `/planeo/`. Vérifié sans
+  connexion : `/portail`, `/planeo/`, `/` et `/opco/` renvoient vers la connexion, l'API refuse (401).
+  Reste : redirection de planning.drfranckmoyal.fr chez Hostinger.

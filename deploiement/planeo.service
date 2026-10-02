@@ -1,0 +1,24 @@
+[Unit]
+Description=Planeo - occupation de la salle de formation
+After=network-online.target
+Wants=network-online.target
+StartLimitBurst=5
+StartLimitIntervalSec=120
+
+[Service]
+User=dfm
+Group=dfm
+WorkingDirectory=/home/dfm/Planeo
+# Meme fichier d'acces que DFM et OPCO Watch : un seul mot de passe.
+# Planeo n'y lit que le secret des sessions et ne l'ecrit jamais.
+Environment=PLANEO_ACCES=/home/dfm/DFM/acces.json
+Environment=PLANEO_DONNEES=/home/dfm/Planeo/donnees
+Environment=PLANEO_PORT=5003
+Environment=PLANEO_PROXY=1
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/home/dfm/Planeo/venv/bin/python app.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
