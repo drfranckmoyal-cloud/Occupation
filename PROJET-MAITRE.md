@@ -84,6 +84,9 @@ puis commit et push dans la foulée.
 - D22 (02/10) **Choix des jours par un petit calendrier cliquable** dans la saisie (un clic ajoute ou
   retire un jour, flèches pour changer de mois, pastilles des formations déjà prévues, fermetures et
   fériés visibles), au lieu du champ date + bouton « Ajouter ».
+- D23 (02/10) **Le mois et la date au centre** : bandeau central dans l'en-tête fixe, mois en très grand
+  (année en bleu), grosses flèches de part et d'autre, « Aujourd'hui : <date du jour> » dessous (clic =
+  retour au mois courant). Numéros des jours agrandis, jour courant encadré.
 - D14 (02/10) Un chevauchement apparaît en deux couleurs, entouré de rouge.
 
 ## Questions ouvertes
