@@ -18,7 +18,7 @@ puis commit et push dans la foulée.
 | 1 | Cadrage : qui saisit, qui consulte, où ça vit | Fait (02/10/2026) |
 | 2 | Maquette visuelle (vue mois, vue année) | Faite ; Franck demande la construction complète |
 | 3 | Construction de l'outil (`site/`) | Fait, essayé sur le Mac (02/10/2026) |
-| 4 | Mise en ligne sur planning.drfranckmoyal.fr, mot de passe, partage du lien | À faire (voir §Mise en ligne) |
+| 4 | Mise en ligne sur planning.drfranckmoyal.fr | **En ligne** (02/10/2026) ; reste : mot de passe créé par Franck |
 
 ## Cahier des charges initial (Franck, 02/10/2026)
 
@@ -78,7 +78,7 @@ Toutes tranchées au 02/10/2026 (Q1→D1, Q2→D10, Q3→D2, Q4→D5, Q5→D3, Q
 
 ## Mise en ligne
 
-Une fois pour toutes (avec l'accord de Franck, dans son Chrome) :
+Fait le 02/10/2026 (avec l'accord de Franck, dans son Chrome) :
 1. hPanel → site drfranckmoyal.fr → Domaines → Sous-domaines : créer `planning` (dossier
    `public_html/planning`).
 2. Si besoin, chez OVH (où est réservé le domaine) : enregistrement A `planning` → `91.108.101.161`.
@@ -116,6 +116,13 @@ sous-domaine, « Extract » avec `.` et « Overwrite existing files », puis met
   serveur d'essai : création du mot de passe, organismes, formations, mémoire des titres, alerte de
   chevauchement, refus d'écrire sans connexion, vue visiteur sans boutons de saisie. Archive prête.
   Reste la mise en ligne (sous-domaine, DNS, dépôt, mot de passe).
+- **02/10/2026** — Mise en ligne, accord de Franck : sous-domaine `planning` créé dans hPanel (dossier
+  `/home/u272950422/domains/drfranckmoyal.fr/public_html/planning`) ; chez OVH, enregistrement A
+  `planning` → `91.108.101.161` ajouté (rien d'autre touché) ; certificat https Lifetime SSL posé
+  automatiquement ; archive déposée et décompressée, archive et page d'attente `default.php` mises
+  à la corbeille. Vérifié en ligne : page 200, `donnees/` et `.htaccess` refusés (403), écriture sans
+  connexion refusée (401), en-tête manquant refusé (403), mot de passe trop court refusé, page non
+  indexable. Reste : Franck crée son mot de passe (`/?admin`), puis premier enregistrement à vérifier.
 
 ## Garde-fous
 
