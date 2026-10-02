@@ -18,7 +18,7 @@ puis commit et push dans la foulée.
 | 1 | Cadrage : qui saisit, qui consulte, où ça vit | Fait (02/10/2026) |
 | 2 | Maquette visuelle (vue mois, vue année) | Faite ; Franck demande la construction complète |
 | 3 | Construction de l'outil (`site/`) | Fait, essayé sur le Mac (02/10/2026) |
-| 4 | Mise en ligne sur planning.drfranckmoyal.fr | **En service** (02/10/2026) : mot de passe créé, premiers enregistrements vérifiés |
+| 4 | Mise en ligne sur planning.drfranckmoyal.fr | **En service** (02/10/2026), relié au portail CEMEDIS Formations |
 
 ## Cahier des charges initial (Franck, 02/10/2026)
 
@@ -137,6 +137,11 @@ sous-domaine, « Extract » avec `.` et « Overwrite existing files », puis met
 - **02/10/2026** — Intégration au portail CEMEDIS Formations (D17) et nom Planéo (D16). Carte préparée,
   copie d'essai déposée à `/portail/essai-salle.html` sur le serveur DFM. Mise en ligne de la carte et
   de la nouvelle version de Planéo en attente de l'accord explicite de Franck.
+- **02/10/2026** — Accord de Franck (« oui pour les deux ») : portail mis à jour sur le serveur DFM
+  (ancienne page gardée en `/var/www/portail/index.html.avant-planeo`, copie d'essai supprimée) ;
+  Planéo redéposé chez Hostinger (archive mise à la corbeille). Vérifié en ligne : carte Planéo
+  présente sur le portail, titre « Planéo » et lien « Portail CEMEDIS » sur le planning, données
+  intactes (3 organismes, 2 formations).
 
 ## Garde-fous
 
