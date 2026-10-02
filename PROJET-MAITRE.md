@@ -73,6 +73,8 @@ puis commit et push dans la foulée.
   fermée derrière cette connexion. La connexion dure une journée de travail (réglage DFM).
   L'ancienne adresse planning.drfranckmoyal.fr renvoie vers la nouvelle. Version PHP (`site/`)
   gardée en archive. Notice serveur : `deploiement/LISEZ-MOI.md`.
+- D19 (02/10) **L'annexe planning.drfranckmoyal.fr est retirée** (DNS OVH, sous-domaine et dossier
+  Hostinger) : rien de Planéo ne reste sur drfranckmoyal.fr. Planéo vit uniquement sur le portail.
 - D14 (02/10) Un chevauchement apparaît en deux couleurs, entouré de rouge.
 
 ## Questions ouvertes
@@ -160,3 +162,7 @@ sous-domaine, « Extract » avec `.` et « Overwrite existing files », puis met
   portail fermé derrière la connexion DFM, carte Planéo pointant vers `/planeo/`. Vérifié sans
   connexion : `/portail`, `/planeo/`, `/` et `/opco/` renvoient vers la connexion, l'API refuse (401).
   Reste : redirection de planning.drfranckmoyal.fr chez Hostinger.
+- **02/10/2026** — Franck préfère retirer l'annexe plutôt que rediriger (D19). Il a lui-même supprimé
+  la ligne A `planning` chez OVH, le sous-domaine dans hPanel et mis le dossier `public_html/planning`
+  à la corbeille. Vérifié : `planning` n'existe plus chez OVH ; messagerie (MX, SPF), vérification
+  Google, site et www intacts. drfranckmoyal.fr est revenu à son état du matin.
