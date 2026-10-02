@@ -15,8 +15,8 @@ puis commit et push dans la foulée.
 | Étape | Contenu | État |
 |---|---|---|
 | 0 | Fichier maître, dépôt git, GitHub | Fait (02/10/2026) |
-| 1 | Cadrage : qui saisit, qui consulte, où ça vit | En cours |
-| 2 | Maquette visuelle (vue mois, vue année) validée par Franck | À faire |
+| 1 | Cadrage : qui saisit, qui consulte, où ça vit | Fait, reste Q2, Q9, Q10 |
+| 2 | Maquette visuelle (vue mois, vue année) validée par Franck | Maquette prête (`maquette/index.html`), en attente de l'avis de Franck |
 | 3 | Construction de l'outil | À faire |
 | 4 | Mise en service, partage aux organismes | À faire |
 
@@ -70,6 +70,11 @@ puis commit et push dans la foulée.
 - **02/10/2026** — Lancement. Franck pose le cahier des charges (ci-dessus). Création du dossier,
   du dépôt git local et de ce fichier. Début du cadrage.
   Premières réponses de Franck : D1 à D4, puis D5 à D8. Dépôt GitHub `Occupation` créé par Franck.
+  Maquette `maquette/index.html` (données fictives, fonctionne sans serveur, mémoire du navigateur) :
+  vue mois où chaque jour a trois bandes matin / après-midi / soirée colorées par organisme ; vue année
+  en 12 petits calendriers, chaque jour coupé en trois bandes ; fenêtre de saisie (organisme, titre
+  proposé parmi ceux déjà utilisés par l'organisme, créneau, jours un par un, note, alerte de
+  chevauchement) ; fenêtre Organismes (ajout, couleur modifiable). Vérifiée dans le navigateur.
 
 ## Garde-fous
 

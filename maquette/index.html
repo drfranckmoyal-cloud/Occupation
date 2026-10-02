@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Occupation de la salle</title>
+<style>
+  :root{
+    --fond:#f6f5f2; --carte:#fff; --texte:#1f2328; --doux:#6b7280; --trait:#e3e1dc;
+    --accent:#1f4e79; --alerte:#b42318; --libre:#f1efea;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--fond);color:var(--texte);font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:16px 20px;background:var(--carte);border-bottom:1px solid var(--trait)}
+  h1{font-size:18px;margin:0}
+  .nav{display:flex;gap:8px;align-items:center}
+  .nav strong{min-width:150px;text-align:center;font-size:17px;text-transform:capitalize}
+  button{font:inherit;border:1px solid var(--trait);background:var(--carte);border-radius:8px;padding:6px 12px;cursor:pointer}
+  button:hover{border-color:var(--doux)}
+  button.actif{background:var(--accent);color:#fff;border-color:var(--accent)}
+  button.principal{background:var(--accent);color:#fff;border-color:var(--accent)}
+  main{padding:16px 20px;max-width:1300px;margin:0 auto}
+  .legende{display:flex;flex-wrap:wrap;gap:14px;margin:0 0 14px;font-size:14px}
+  .legende span{display:inline-flex;align-items:center;gap:6px}
+  .pastille{width:14px;height:14px;border-radius:4px;display:inline-block}
+
+  /* Vue mois */
+  .mois{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+  .entete{font-size:12px;color:var(--doux);text-transform:uppercase;text-align:center;padding:4px 0}
+  .jour{background:var(--carte);border:1px solid var(--trait);border-radius:8px;min-height:118px;padding:4px;display:flex;flex-direction:column;gap:3px;cursor:pointer}
+  .jour.hors{opacity:.35}
+  .jour.weekend{background:#faf9f7}
+  .jour.auj .num{background:var(--accent);color:#fff;border-radius:10px;padding:0 6px}
+  .num{font-size:12px;font-weight:600;align-self:flex-start}
+  .creneau{flex:1;border-radius:5px;background:var(--libre);font-size:11.5px;color:#fff;padding:2px 5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;min-height:22px;position:relative}
+  .creneau.vide{color:transparent}
+  .creneau.conflit{outline:2px solid var(--alerte);outline-offset:-2px}
+  .creneau small{opacity:.85;margin-right:4px}
+
+  /* Vue année */
+  .annee{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+  .mini{background:var(--carte);border:1px solid var(--trait);border-radius:10px;padding:10px;cursor:pointer}
+  .mini h3{margin:0 0 6px;font-size:14px;text-transform:capitalize}
+  .mini .grille{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px}
+  .mini .e{font-size:9px;color:var(--doux);text-align:center}
+  .mj{aspect-ratio:1;border-radius:3px;overflow:hidden;display:flex;flex-direction:column;background:var(--libre);position:relative}
+  .mj b{flex:1}
+  .mj i{position:absolute;inset:0;font-style:normal;font-size:8px;color:#555;display:flex;align-items:center;justify-content:center;pointer-events:none}
+  .mj.plein i{color:#fff;text-shadow:0 0 2px #0006}
+  .mj.hors{visibility:hidden}
+  .mini .compte{font-size:12px;color:var(--doux);margin-top:6px}
+
+  /* Fenêtre de saisie */
+  dialog{border:none;border-radius:14px;padding:0;width:min(520px,94vw);box-shadow:0 20px 50px #0003}
+  dialog::backdrop{background:#0005}
+  form{padding:20px;display:flex;flex-direction:column;gap:12px}
+  form h2{margin:0;font-size:18px}
+  label{font-size:13px;color:var(--doux);display:flex;flex-direction:column;gap:4px}
+  input,select,textarea{font:inherit;padding:8px;border:1px solid var(--trait);border-radius:8px;color:var(--texte)}
+  .choix{display:flex;flex-wrap:wrap;gap:6px}
+  .choix input{display:none}
+  .choix label{flex-direction:row;border:1px solid var(--trait);border-radius:20px;padding:6px 12px;color:var(--texte);cursor:pointer;font-size:14px}
+  .choix input:checked+label{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .dates{display:flex;flex-wrap:wrap;gap:6px}
+  .puce{background:var(--libre);border-radius:14px;padding:3px 10px;font-size:13px}
+  .puce button{border:none;background:none;padding:0 0 0 6px;cursor:pointer}
+  .ligne{display:flex;gap:8px;align-items:end}
+  .ligne>*{flex:1}
+  .alerte{background:#fdecea;color:var(--alerte);border-radius:8px;padding:8px 10px;font-size:13px;display:none}
+  .actions{display:flex;justify-content:space-between;gap:8px}
+  .bandeau{background:#fff7e0;border:1px solid #f0d58a;border-radius:8px;padding:8px 12px;font-size:13px;margin-bottom:14px}
+  .orgs{display:flex;flex-direction:column;gap:6px}
+  .org{display:flex;align-items:center;gap:8px}
+  .org input[type=color]{width:36px;height:30px;padding:0;border:none;background:none}
+
+  @media (max-width:700px){
+    main{padding:12px 8px}
+    .jour{min-height:84px;padding:2px}
+    .creneau{font-size:0;min-height:14px;padding:0}
+    .entete{font-size:10px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Occupation de la salle de formation</h1>
+  <div class="nav">
+    <button id="prec" aria-label="Précédent">‹</button>
+    <strong id="periode"></strong>
+    <button id="suiv" aria-label="Suivant">›</button>
+    <button id="auj">Aujourd'hui</button>
+  </div>
+  <div class="nav">
+    <button id="vMois" class="actif">Mois</button>
+    <button id="vAnnee">Année</button>
+    <button id="btnOrgs">Organismes</button>
+    <button id="btnAjout" class="principal">+ Formation</button>
+  </div>
+</header>
+
+<main>
+  <div class="bandeau">Maquette — données fictives, rien n'est en ligne. Cliquez sur un jour ou une formation pour essayer la saisie.</div>
+  <div class="legende" id="legende"></div>
+  <div id="vue"></div>
+</main>
+
+<dialog id="dlg">
+  <form method="dialog" id="frm">
+    <h2 id="frmTitre">Nouvelle formation</h2>
+    <label>Organisme
+      <select id="fOrg" required></select>
+    </label>
+    <label>Titre de la formation
+      <input id="fTitre" list="titres" required placeholder="Commencez à taper : les titres déjà utilisés sont proposés">
+      <datalist id="titres"></datalist>
+    </label>
+    <div>
+      <label>Créneau</label>
+      <div class="choix" id="fCreneau"></div>
+    </div>
+    <div>
+      <div class="ligne">
+        <label>Ajouter un jour <input type="date" id="fDate"></label>
+        <button type="button" id="ajDate" style="flex:0">Ajouter</button>
+      </div>
+      <div class="dates" id="fDates" style="margin-top:8px"></div>
+      <div style="font-size:13px;color:var(--doux);margin-top:4px" id="fNb"></div>
+    </div>
+    <label>Note libre
+      <textarea id="fNote" rows="2" placeholder="Formateur, matériel, contact…"></textarea>
+    </label>
+    <div class="alerte" id="fAlerte"></div>
+    <div class="actions">
+      <button type="button" id="suppr" style="color:var(--alerte)">Supprimer</button>
+      <span style="display:flex;gap:8px">
+        <button type="button" id="annuler">Annuler</button>
+        <button type="submit" class="principal">Enregistrer</button>
+      </span>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="dlgOrgs">
+  <form method="dialog">
+    <h2>Organismes de formation</h2>
+    <div class="orgs" id="listeOrgs"></div>
+    <div class="ligne">
+      <label>Nouvel organisme <input id="nOrg" placeholder="Nom"></label>
+      <input type="color" id="nCoul" value="#2e7d32" style="flex:0;width:44px;height:38px;padding:2px">
+      <button type="button" id="ajOrg" style="flex:0">Ajouter</button>
+    </div>
+    <div class="actions"><span></span><button class="principal">Fermer</button></div>
+  </form>
+</dialog>
+
+<script>
+const CRENEAUX = [
+  {id:'journee', nom:'Journée', couvre:['matin','apm']},
+  {id:'matin',   nom:'Matin',   couvre:['matin']},
+  {id:'apm',     nom:'Après-midi', couvre:['apm']},
+  {id:'soir',    nom:'Soirée',  couvre:['soir']},
+];
+const BANDES = [['matin','Matin'],['apm','Après-midi'],['soir','Soirée']];
+const MOIS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+const JOURS = ['lun','mar','mer','jeu','ven','sam','dim'];
+
+const iso = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const lisible = s => { const d=new Date(s+'T12:00'); return d.toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'}); };
+
+// --- Données fictives de la maquette ---
+function donneesDemo(){
+  const a = new Date().getFullYear(), m = new Date().getMonth();
+  const j = (dm, jour) => iso(new Date(a, m+dm, jour));
+  return {
+    orgs:[
+      {id:'o1', nom:'Organisme A', couleur:'#1f77b4'},
+      {id:'o2', nom:'Organisme B', couleur:'#d6731c'},
+      {id:'o3', nom:'Organisme C', couleur:'#2e8b57'},
+      {id:'o4', nom:'Organisme D', couleur:'#8e44ad'},
+    ],
+    formations:[
+      {id:'f1', org:'o1', titre:'Implantologie — module 1', creneau:'journee', jours:[j(0,6),j(0,7),j(0,8)], note:'Formateur : Dr X'},
+      {id:'f2', org:'o2', titre:'Radioprotection', creneau:'matin', jours:[j(0,9)], note:''},
+      {id:'f3', org:'o3', titre:'Photographie clinique', creneau:'soir', jours:[j(0,9),j(0,16),j(0,23)], note:'Apporter les boîtiers'},
+      {id:'f4', org:'o4', titre:'Gestion du cabinet', creneau:'apm', jours:[j(0,14),j(0,15)], note:''},
+      {id:'f5', org:'o1', titre:'Implantologie — module 2', creneau:'journee', jours:[j(0,20),j(0,21)], note:''},
+      {id:'f6', org:'o2', titre:'Urgences au cabinet', creneau:'matin', jours:[j(0,21)], note:'Chevauchement volontaire pour montrer l\'alerte'},
+      {id:'f7', org:'o3', titre:'Photographie clinique', creneau:'soir', jours:[j(1,7),j(1,14)], note:''},
+      {id:'f8', org:'o4', titre:'Gestion du cabinet', creneau:'journee', jours:[j(1,3),j(1,4)], note:''},
+      {id:'f9', org:'o1', titre:'Implantologie — module 3', creneau:'journee', jours:[j(2,10),j(2,11),j(2,12)], note:''},
+      {id:'f10',org:'o2', titre:'Radioprotection', creneau:'matin', jours:[j(-1,12),j(3,5)], note:''},
+      {id:'f11',org:'o3', titre:'Composite antérieur', creneau:'apm', jours:[j(-2,18),j(4,9)], note:''},
+    ]
+  };
+}
+let D;
+try { D = JSON.parse(localStorage.getItem('occupation-maquette')) || donneesDemo(); } catch(e){ D = donneesDemo(); }
+const sauver = () => { try{ localStorage.setItem('occupation-maquette', JSON.stringify(D)); }catch(e){} };
+
+let vue = 'mois', curseur = new Date(); curseur.setDate(1);
+const org = id => D.orgs.find(o=>o.id===id) || {nom:'?',couleur:'#999'};
+
+// Index : date -> bande -> [formations]
+function index(){
+  const ix = {};
+  for (const f of D.formations){
+    const c = CRENEAUX.find(c=>c.id===f.creneau);
+    for (const j of f.jours) for (const b of c.couvre){
+      ((ix[j] ??= {})[b] ??= []).push(f);
+    }
+  }
+  return ix;
+}
+
+function legende(){
+  document.getElementById('legende').innerHTML = D.orgs.map(o=>`<span><i class="pastille" style="background:${o.couleur}"></i>${o.nom}</span>`).join('');
+}
+
+function grilleMois(a, m){
+  const premier = new Date(a,m,1), decal = (premier.getDay()+6)%7;
+  const debut = new Date(a,m,1-decal), cases=[];
+  const n = Math.ceil((decal + new Date(a,m+1,0).getDate())/7)*7;
+  for (let i=0;i<n;i++) cases.push(new Date(debut.getFullYear(),debut.getMonth(),debut.getDate()+i));
+  return cases;
+}
+
+function rendreMois(){
+  const a=curseur.getFullYear(), m=curseur.getMonth(), ix=index(), auj=iso(new Date());
+  document.getElementById('periode').textContent = MOIS[m]+' '+a;
+  let h = JOURS.map(j=>`<div class="entete">${j}</div>`).join('');
+  for (const d of grilleMois(a,m)){
+    const k=iso(d), cl=['jour'];
+    if (d.getMonth()!==m) cl.push('hors');
+    if (d.getDay()===0||d.getDay()===6) cl.push('weekend');
+    if (k===auj) cl.push('auj');
+    h += `<div class="${cl.join(' ')}" data-jour="${k}"><span class="num">${d.getDate()}</span>`;
+    for (const [b,nomB] of BANDES){
+      const fs = ix[k]?.[b] || [];
+      if (!fs.length){ h += `<div class="creneau vide" title="${nomB} libre">.</div>`; continue; }
+      const f = fs[0], o = org(f.org);
+      h += `<div class="creneau${fs.length>1?' conflit':''}" data-f="${f.id}" style="background:${o.couleur}" title="${nomB} — ${o.nom} — ${f.titre}${fs.length>1?' (+ '+(fs.length-1)+' autre(s) : chevauchement)':''}"><small>${nomB==='Après-midi'?'AM':nomB}</small>${f.titre}</div>`;
+    }
+    h += '</div>';
+  }
+  const v = document.getElementById('vue'); v.className='mois'; v.innerHTML=h;
+}
+
+function rendreAnnee(){
+  const a=curseur.getFullYear(), ix=index();
+  document.getElementById('periode').textContent = a;
+  let h='';
+  for (let m=0;m<12;m++){
+    let g = JOURS.map(j=>`<div class="e">${j[0]}</div>`).join(''), occ=0;
+    for (const d of grilleMois(a,m)){
+      if (d.getMonth()!==m){ g+='<div class="mj hors"></div>'; continue; }
+      const k=iso(d), bandes = BANDES.map(([b])=>ix[k]?.[b]?.[0]);
+      const plein = bandes.some(Boolean); if (plein) occ++;
+      const titre = BANDES.map(([b,n],i)=>bandes[i]?`${n} : ${org(bandes[i].org).nom} — ${bandes[i].titre}`:'').filter(Boolean).join('\n');
+      g += `<div class="mj${plein?' plein':''}" title="${d.getDate()} ${MOIS[m]}${titre?'\n'+titre:''}">`+
+           bandes.map(f=>`<b style="${f?'background:'+org(f.org).couleur:''}"></b>`).join('')+
+           `<i>${d.getDate()}</i></div>`;
+    }
+    h += `<div class="mini" data-mois="${m}"><h3>${MOIS[m]}</h3><div class="grille">${g}</div><div class="compte">${occ} jour${occ>1?'s':''} occupé${occ>1?'s':''}</div></div>`;
+  }
+  const v = document.getElementById('vue'); v.className='annee'; v.innerHTML=h;
+}
+
+function rendre(){ legende(); vue==='mois'?rendreMois():rendreAnnee(); }
+
+// --- Navigation ---
+document.getElementById('prec').onclick=()=>{ vue==='mois'?curseur.setMonth(curseur.getMonth()-1):curseur.setFullYear(curseur.getFullYear()-1); rendre(); };
+document.getElementById('suiv').onclick=()=>{ vue==='mois'?curseur.setMonth(curseur.getMonth()+1):curseur.setFullYear(curseur.getFullYear()+1); rendre(); };
+document.getElementById('auj').onclick=()=>{ curseur=new Date(); curseur.setDate(1); rendre(); };
+const choisirVue = v => { vue=v; document.getElementById('vMois').classList.toggle('actif',v==='mois'); document.getElementById('vAnnee').classList.toggle('actif',v==='annee'); rendre(); };
+document.getElementById('vMois').onclick=()=>choisirVue('mois');
+document.getElementById('vAnnee').onclick=()=>choisirVue('annee');
+document.getElementById('vue').addEventListener('click', e=>{
+  const mini = e.target.closest('.mini');
+  if (mini){ curseur.setMonth(+mini.dataset.mois); choisirVue('mois'); return; }
+  const cr = e.target.closest('.creneau[data-f]');
+  if (cr){ ouvrir(D.formations.find(f=>f.id===cr.dataset.f)); return; }
+  const j = e.target.closest('.jour');
+  if (j) ouvrir(null, j.dataset.jour);
+});
+
+// --- Saisie ---
+const dlg=document.getElementById('dlg'); let edite=null, jours=[];
+document.getElementById('fCreneau').innerHTML = CRENEAUX.map(c=>`<input type="radio" name="cr" id="cr-${c.id}" value="${c.id}"><label for="cr-${c.id}">${c.nom}</label>`).join('');
+
+function majTitres(){
+  const id=document.getElementById('fOrg').value;
+  const t=[...new Set(D.formations.filter(f=>f.org===id).map(f=>f.titre))].sort();
+  document.getElementById('titres').innerHTML=t.map(x=>`<option value="${x.replace(/"/g,'&quot;')}">`).join('');
+}
+function majJours(){
+  jours.sort();
+  document.getElementById('fDates').innerHTML = jours.map(j=>`<span class="puce">${lisible(j)}<button type="button" data-j="${j}" aria-label="Retirer">×</button></span>`).join('');
+  document.getElementById('fNb').textContent = jours.length ? `${jours.length} jour${jours.length>1?'s':''}` : 'Aucun jour choisi';
+  verifier();
+}
+function verifier(){
+  const cr = document.querySelector('input[name=cr]:checked')?.value; const a=document.getElementById('fAlerte');
+  if (!cr){ a.style.display='none'; return; }
+  const couvre = CRENEAUX.find(c=>c.id===cr).couvre, ix=index(), msgs=[];
+  for (const j of jours) for (const b of couvre) for (const f of (ix[j]?.[b]||[])){
+    if (edite && f.id===edite.id) continue;
+    msgs.push(`${lisible(j)} : déjà « ${f.titre} » (${org(f.org).nom})`);
+  }
+  const u=[...new Set(msgs)];
+  a.style.display = u.length?'block':'none';
+  a.innerHTML = u.length ? '<b>Attention, la salle est déjà occupée :</b><br>'+u.join('<br>')+'<br>Vous pouvez quand même enregistrer.' : '';
+}
+function ouvrir(f, jour){
+  edite=f;
+  document.getElementById('frmTitre').textContent = f?'Modifier la formation':'Nouvelle formation';
+  document.getElementById('fOrg').innerHTML = D.orgs.map(o=>`<option value="${o.id}">${o.nom}</option>`).join('');
+  document.getElementById('fOrg').value = f?f.org:D.orgs[0]?.id;
+  document.getElementById('fTitre').value = f?f.titre:'';
+  document.querySelectorAll('input[name=cr]').forEach(r=>r.checked = r.value===(f?f.creneau:'journee'));
+  document.getElementById('fNote').value = f?f.note:'';
+  jours = f?[...f.jours]:(jour?[jour]:[]);
+  document.getElementById('fDate').value = jour||'';
+  document.getElementById('suppr').style.visibility = f?'visible':'hidden';
+  majTitres(); majJours(); dlg.showModal();
+}
+document.getElementById('btnAjout').onclick=()=>ouvrir(null);
+document.getElementById('fOrg').onchange=majTitres;
+document.getElementById('fCreneau').onchange=verifier;
+document.getElementById('ajDate').onclick=()=>{ const v=document.getElementById('fDate').value; if(v&&!jours.includes(v)){ jours.push(v); majJours(); } };
+document.getElementById('fDates').onclick=e=>{ const j=e.target.dataset.j; if(j){ jours=jours.filter(x=>x!==j); majJours(); } };
+document.getElementById('annuler').onclick=()=>dlg.close();
+document.getElementById('suppr').onclick=()=>{ if(edite && confirm('Supprimer cette formation ?')){ D.formations=D.formations.filter(f=>f.id!==edite.id); sauver(); dlg.close(); rendre(); } };
+document.getElementById('frm').onsubmit=e=>{
+  if (!jours.length){ e.preventDefault(); alert('Choisissez au moins un jour.'); return; }
+  const v={ org:document.getElementById('fOrg').value, titre:document.getElementById('fTitre').value.trim(),
+            creneau:document.querySelector('input[name=cr]:checked').value, jours:[...jours], note:document.getElementById('fNote').value.trim() };
+  if (edite) Object.assign(edite,v); else D.formations.push({id:'f'+Date.now(),...v});
+  sauver(); rendre();
+};
+
+// --- Organismes ---
+const dlgOrgs=document.getElementById('dlgOrgs');
+function rendreOrgs(){
+  document.getElementById('listeOrgs').innerHTML = D.orgs.map(o=>`<div class="org"><input type="color" value="${o.couleur}" data-o="${o.id}"><span>${o.nom}</span></div>`).join('');
+}
+document.getElementById('btnOrgs').onclick=()=>{ rendreOrgs(); dlgOrgs.showModal(); };
+document.getElementById('listeOrgs').oninput=e=>{ const o=D.orgs.find(o=>o.id===e.target.dataset.o); if(o){ o.couleur=e.target.value; sauver(); rendre(); } };
+document.getElementById('ajOrg').onclick=()=>{
+  const n=document.getElementById('nOrg').value.trim(); if(!n) return;
+  D.orgs.push({id:'o'+Date.now(), nom:n, couleur:document.getElementById('nCoul').value});
+  document.getElementById('nOrg').value=''; sauver(); rendreOrgs(); rendre();
+};
+
+rendre();
+</script>
+</body>
+</html>
