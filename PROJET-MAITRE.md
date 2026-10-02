@@ -58,6 +58,8 @@ puis commit et push dans la foulée.
 - D13 (02/10) Le mot de passe administrateur est **créé par Franck lui-même** à la première visite de
   `planning.drfranckmoyal.fr/?admin` ; seule son empreinte est gardée sur le serveur, jamais en clair,
   jamais dans le dépôt. 10 essais ratés en 15 min bloquent l'accès un quart d'heure.
+- D15 (02/10) Franck gère seul tous les organismes : aucun accès à créer pour eux. Le lien public
+  reste disponible, le partager ou non est à sa main.
 - D14 (02/10) Un chevauchement apparaît en deux couleurs, entouré de rouge.
 
 ## Questions ouvertes
