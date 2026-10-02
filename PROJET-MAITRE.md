@@ -15,10 +15,10 @@ puis commit et push dans la foulée.
 | Étape | Contenu | État |
 |---|---|---|
 | 0 | Fichier maître, dépôt git, GitHub | Fait (02/10/2026) |
-| 1 | Cadrage : qui saisit, qui consulte, où ça vit | Fait, reste Q2, Q9, Q10 |
-| 2 | Maquette visuelle (vue mois, vue année) validée par Franck | Maquette prête (`maquette/index.html`), en attente de l'avis de Franck |
-| 3 | Construction de l'outil | À faire |
-| 4 | Mise en service, partage aux organismes | À faire |
+| 1 | Cadrage : qui saisit, qui consulte, où ça vit | Fait (02/10/2026) |
+| 2 | Maquette visuelle (vue mois, vue année) | Faite ; Franck demande la construction complète |
+| 3 | Construction de l'outil (`site/`) | Fait, essayé sur le Mac (02/10/2026) |
+| 4 | Mise en ligne sur planning.drfranckmoyal.fr, mot de passe, partage du lien | À faire (voir §Mise en ligne) |
 
 ## Cahier des charges initial (Franck, 02/10/2026)
 
@@ -48,22 +48,58 @@ puis commit et push dans la foulée.
 - D6 (02/10) **Une seule salle.**
 - D7 (02/10) Par formation : organisme, titre, créneau, jours, **et une note libre**.
 - D8 (02/10) **Hébergement sur le compte Hostinger de Franck** (sous-domaine type `planning.drfranckmoyal.fr`
-  à confirmer) : consultation publique par lien, saisie derrière le mot de passe de Franck.
+  : consultation publique par lien, saisie derrière le mot de passe de Franck.
+- D9 (02/10) **Pas d'horaires** affichés : seulement Journée / Matin / Après-midi / Soirée.
+- D10 (02/10) **Visible par toute personne qui a le lien**, sans mot de passe. Page non indexée par Google.
+- D11 (02/10) Adresse : **planning.drfranckmoyal.fr**.
+- D12 (02/10) Technique : une page (`site/index.html`) + un petit programme PHP (`site/api.php`) chez
+  Hostinger ; données dans un fichier `donnees/occupation.json` (pas de base MySQL à gérer), fermé au
+  public. Copie automatique avant chaque modification (`donnees/sauvegardes/`, 200 dernières gardées).
+- D13 (02/10) Le mot de passe administrateur est **créé par Franck lui-même** à la première visite de
+  `planning.drfranckmoyal.fr/?admin` ; seule son empreinte est gardée sur le serveur, jamais en clair,
+  jamais dans le dépôt. 10 essais ratés en 15 min bloquent l'accès un quart d'heure.
+- D14 (02/10) Un chevauchement apparaît en deux couleurs, entouré de rouge.
 
 ## Questions ouvertes
 
-| # | Question | Qui tranche | Réponse |
-|---|---|---|---|
-| Q1 | Qui saisit les réservations : Franck seul, ou chaque organisme ? | Franck | Franck seul (D1) |
-| Q2 | Qui consulte, et sur quoi (ordinateur, téléphone) ? | Franck | |
-| Q3 | Où vit l'outil (page web en ligne, Google Sheet, fichier sur le Mac…) ? | Franck, sur proposition de Claude | Page web partagée (D2) |
-| Q4 | Combien d'organismes, lesquels, quelles couleurs ? | Franck | Créés par Franck dans l'application (D5) |
-| Q5 | Que faire si deux formations tombent sur le même créneau (blocage ou simple alerte) ? | Franck | Alerte seulement (D3) |
-| Q6 | Les jours d'une formation sur plusieurs jours sont-ils toujours consécutifs ? Week-ends inclus ? | Franck | Dates libres (D4) |
-| Q7 | Une seule salle, ou plusieurs à terme ? | Franck | Une seule (D6) |
-| Q8 | Faut-il d'autres infos (formateur, nombre de participants, contact) ? | Franck | Note libre (D7) |
-| Q9 | Afficher les horaires des créneaux (ex. matin 9 h–12 h 30) ou seulement les mots ? | Franck | |
-| Q10 | Adresse exacte de la page (sous-domaine) | Franck | |
+Toutes tranchées au 02/10/2026 (Q1→D1, Q2→D10, Q3→D2, Q4→D5, Q5→D3, Q6→D4, Q7→D6, Q8→D7, Q9→D9, Q10→D11).
+
+## Ce que fait l'outil
+
+- **Tout le monde (lien)** : vue mois (chaque jour en trois bandes matin / après-midi / soirée, couleur de
+  l'organisme, titre), vue année (12 petits calendriers), clic sur un jour = détail (titre, organisme,
+  créneau, jours, note). Flèches ← → du clavier pour changer de mois/année. Imprimable.
+- **Franck connecté** (« Accès administrateur » en bas de page, ou adresse terminée par `?admin`) :
+  bouton « Organismes » (créer, renommer, changer la couleur, supprimer s'il n'a aucune formation,
+  oublier un titre mémorisé) ; « + Formation » ou clic sur un jour libre (organisme, titre proposé parmi
+  ceux de l'organisme, créneau, jours ajoutés un par un, note libre visible par tous) ; clic sur une
+  formation pour la modifier ou la supprimer ; alerte si la salle est déjà prise ; « Changer le mot de passe ».
+- La connexion reste ouverte 60 jours sur le même navigateur.
+
+## Mise en ligne
+
+Une fois pour toutes (avec l'accord de Franck, dans son Chrome) :
+1. hPanel → site drfranckmoyal.fr → Domaines → Sous-domaines : créer `planning` (dossier
+   `public_html/planning`).
+2. Si besoin, chez OVH (où est réservé le domaine) : enregistrement A `planning` → `91.108.101.161`.
+3. Attendre le certificat https (hPanel → Sécurité → SSL).
+4. Déposer l'archive (ci-dessous) dans le dossier du sous-domaine.
+5. Franck ouvre `https://planning.drfranckmoyal.fr/?admin` et **crée lui-même son mot de passe**.
+
+Mettre à jour la page plus tard : `outils/paquet.sh` fabrique `livrables/occupation-site.zip` (jamais de
+données dedans) ; dans le gestionnaire de fichiers d'Hostinger, le déposer dans le dossier du
+sous-domaine, « Extract » avec `.` et « Overwrite existing files », puis mettre le zip à la corbeille
+(décocher « Skip trash bin »). Le dossier `donnees/` en ligne n'est jamais écrasé.
+
+## Informations techniques
+
+- `site/` : ce qui part en ligne (`index.html`, `api.php`, `.htaccess`, `robots.txt`, `donnees/.htaccess`).
+- `maquette/` : la maquette du 02/10 (données fictives, sans serveur).
+- `outils/serveur_essai.py` : imite `api.php` en Python pour essayer la page sur le Mac (PHP n'est pas
+  installé sur le Mac) ; aperçu `occupation-essai`, port 8791. Données d'essai dans un dossier temporaire.
+- `outils/paquet.sh` : fabrique l'archive à déposer.
+- Sauvegarde en ligne : `donnees/occupation.json` + `donnees/sauvegardes/`. Pour récupérer un état
+  ancien, remplacer `occupation.json` par une copie de `sauvegardes/` dans le gestionnaire de fichiers.
 
 ## Journal
 
@@ -75,8 +111,14 @@ puis commit et push dans la foulée.
   en 12 petits calendriers, chaque jour coupé en trois bandes ; fenêtre de saisie (organisme, titre
   proposé parmi ceux déjà utilisés par l'organisme, créneau, jours un par un, note, alerte de
   chevauchement) ; fenêtre Organismes (ajout, couleur modifiable). Vérifiée dans le navigateur.
+- **02/10/2026** — Franck tranche : pas d'horaires, visible par lien, adresse planning.drfranckmoyal.fr,
+  « construis tout ». Construction de `site/` (page + `api.php`), essai complet sur le Mac avec le
+  serveur d'essai : création du mot de passe, organismes, formations, mémoire des titres, alerte de
+  chevauchement, refus d'écrire sans connexion, vue visiteur sans boutons de saisie. Archive prête.
+  Reste la mise en ligne (sous-domaine, DNS, dépôt, mot de passe).
 
 ## Garde-fous
 
 - Aucune donnée personnelle de stagiaires dans le planning ni dans le dépôt.
 - Rien de secret (mot de passe, clé) dans le dépôt.
+- Le contenu en ligne de `donnees/` (planning, empreinte du mot de passe) n'est ni copié dans le dépôt ni écrasé.

@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Occupation de la salle de formation</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='6' width='26' height='23' rx='4' fill='%231f4e79'/%3E%3Crect x='3' y='6' width='26' height='7' rx='3' fill='%23173a5c'/%3E%3Crect x='8' y='17' width='6' height='4' rx='1' fill='%23fff'/%3E%3Crect x='18' y='17' width='6' height='4' rx='1' fill='%23f2b33d'/%3E%3Crect x='8' y='23' width='6' height='3' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --fond:#f6f5f2; --carte:#fff; --texte:#1f2328; --doux:#6b7280; --trait:#e3e1dc;
+    --accent:#1f4e79; --alerte:#b42318; --libre:#efede8; --weekend:#faf9f7;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--fond);color:var(--texte);font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  header{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--carte);border-bottom:1px solid var(--trait);position:sticky;top:0;z-index:5}
+  h1{font-size:18px;margin:0}
+  .nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .nav strong{min-width:140px;text-align:center;font-size:17px;text-transform:capitalize}
+  button{font:inherit;color:inherit;border:1px solid var(--trait);background:var(--carte);border-radius:8px;padding:6px 12px;cursor:pointer}
+  button:hover{border-color:var(--doux)}
+  button.actif,button.principal{background:var(--accent);color:#fff;border-color:var(--accent)}
+  button.lien{border:none;background:none;padding:0;color:var(--doux);text-decoration:underline;font-size:13px}
+  .admin-seul{display:none!important}
+  body.admin .admin-seul{display:inline-flex!important}
+  main{padding:16px 20px 30px;max-width:1300px;margin:0 auto}
+  .legende{display:flex;flex-wrap:wrap;gap:8px 16px;margin:0 0 14px;font-size:14px;align-items:center}
+  .legende span{display:inline-flex;align-items:center;gap:6px}
+  .legende .doux{color:var(--doux);font-size:13px}
+  .pastille{width:14px;height:14px;border-radius:4px;display:inline-block;flex:none}
+  .vide-msg{background:var(--carte);border:1px dashed var(--trait);border-radius:10px;padding:16px;margin-bottom:14px;color:var(--doux)}
+  footer{max-width:1300px;margin:0 auto;padding:0 20px 24px;display:flex;justify-content:space-between;gap:12px;color:var(--doux);font-size:13px;flex-wrap:wrap}
+
+  /* Vue mois */
+  .mois{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+  .entete{font-size:12px;color:var(--doux);text-transform:uppercase;text-align:center;padding:4px 0}
+  .jour{background:var(--carte);border:1px solid var(--trait);border-radius:8px;min-height:118px;padding:4px;display:flex;flex-direction:column;gap:3px;cursor:pointer}
+  .jour.hors{opacity:.35}
+  .jour.weekend{background:var(--weekend)}
+  .jour.auj{border-color:var(--accent)}
+  .jour.auj .num{background:var(--accent);color:#fff;border-radius:10px;padding:0 6px}
+  .num{font-size:12px;font-weight:600;align-self:flex-start}
+  .creneau{flex:1;border-radius:5px;background:var(--libre);font-size:11.5px;color:#fff;padding:2px 5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;min-height:22px}
+  .creneau.vide{color:transparent}
+  .creneau.conflit{outline:2px solid var(--alerte);outline-offset:-2px}
+  .creneau small{opacity:.85;margin-right:4px}
+
+  /* Vue année */
+  .annee{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+  .mini{background:var(--carte);border:1px solid var(--trait);border-radius:10px;padding:10px;cursor:pointer}
+  .mini:hover{border-color:var(--doux)}
+  .mini h3{margin:0 0 6px;font-size:14px;text-transform:capitalize}
+  .mini .grille{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px}
+  .mini .e{font-size:9px;color:var(--doux);text-align:center}
+  .mj{aspect-ratio:1;border-radius:3px;overflow:hidden;display:flex;flex-direction:column;background:var(--libre);position:relative}
+  .mj b{flex:1}
+  .mj i{position:absolute;inset:0;font-style:normal;font-size:8px;color:#555;display:flex;align-items:center;justify-content:center;pointer-events:none}
+  .mj.plein i{color:#fff;text-shadow:0 0 2px #0008}
+  .mj.auj{outline:2px solid var(--accent)}
+  .mj.hors{visibility:hidden}
+  .mini .compte{font-size:12px;color:var(--doux);margin-top:6px}
+
+  /* Fenêtres */
+  dialog{border:none;border-radius:14px;padding:0;width:min(520px,94vw);box-shadow:0 20px 50px #0003;color:var(--texte);background:var(--carte)}
+  dialog::backdrop{background:#0005}
+  dialog form,dialog .corps{padding:20px;display:flex;flex-direction:column;gap:12px}
+  dialog h2{margin:0;font-size:18px}
+  label{font-size:13px;color:var(--doux);display:flex;flex-direction:column;gap:4px}
+  input,select,textarea{font:inherit;padding:8px;border:1px solid var(--trait);border-radius:8px;color:var(--texte);background:var(--carte)}
+  .choix{display:flex;flex-wrap:wrap;gap:6px}
+  .choix input{position:absolute;opacity:0;pointer-events:none}
+  .choix label{flex-direction:row;border:1px solid var(--trait);border-radius:20px;padding:6px 12px;color:var(--texte);cursor:pointer;font-size:14px}
+  .choix input:checked+label{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .choix input:focus-visible+label{outline:2px solid var(--accent);outline-offset:2px}
+  .dates{display:flex;flex-wrap:wrap;gap:6px}
+  .puce{background:var(--libre);border-radius:14px;padding:3px 10px;font-size:13px;display:inline-flex;align-items:center}
+  .puce button{border:none;background:none;padding:0 0 0 6px;cursor:pointer;font-size:15px;line-height:1}
+  .ligne{display:flex;gap:8px;align-items:end}
+  .ligne>label{flex:1}
+  .alerte{background:#fdecea;color:var(--alerte);border-radius:8px;padding:8px 10px;font-size:13px}
+  .info{color:var(--doux);font-size:13px}
+  .actions{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
+  .actions span{display:flex;gap:8px}
+  .orgs{display:flex;flex-direction:column;gap:10px;max-height:50vh;overflow:auto}
+  .org{border:1px solid var(--trait);border-radius:10px;padding:8px}
+  .org .haut{display:flex;align-items:center;gap:8px}
+  .org .haut input[type=text]{flex:1}
+  input[type=color]{width:40px;height:36px;padding:2px;flex:none}
+  .org details{margin-top:6px;font-size:13px}
+  .org summary{cursor:pointer;color:var(--doux)}
+  .detail-f{border-left:5px solid;padding:4px 10px;margin:0}
+  .detail-f h3{margin:0 0 2px;font-size:15px}
+  .detail-f p{margin:2px 0;font-size:13px;color:var(--doux)}
+  .detail-f .note{color:var(--texte);white-space:pre-wrap}
+  .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#1f2328;color:#fff;padding:10px 16px;border-radius:10px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20;max-width:90vw}
+  .toast.on{opacity:1}
+  .toast.err{background:var(--alerte)}
+
+  @media (max-width:700px){
+    header{padding:8px;position:static;gap:6px}
+    h1{font-size:15px;width:100%}
+    button{padding:5px 9px;font-size:14px}
+    main{padding:12px 6px 24px}
+    .jour{min-height:76px;padding:2px;gap:2px}
+    .creneau{font-size:0;min-height:13px;padding:0}
+    .entete{font-size:10px}
+    .nav strong{min-width:110px;font-size:15px}
+  }
+  @media print{
+    header .nav:last-child,footer,.toast{display:none}
+    header{position:static}
+    body{background:#fff}
+    .creneau,.mj b,.pastille{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Occupation de la salle de formation</h1>
+  <div class="nav">
+    <button id="prec" aria-label="Période précédente">‹</button>
+    <strong id="periode"></strong>
+    <button id="suiv" aria-label="Période suivante">›</button>
+    <button id="auj">Aujourd'hui</button>
+  </div>
+  <div class="nav">
+    <button id="vMois" class="actif">Mois</button>
+    <button id="vAnnee">Année</button>
+    <button id="btnOrgs" class="admin-seul">Organismes</button>
+    <button id="btnAjout" class="principal admin-seul">+ Formation</button>
+  </div>
+</header>
+
+<main>
+  <div id="msgVide" class="vide-msg" hidden></div>
+  <div class="legende" id="legende"></div>
+  <div id="vue"></div>
+</main>
+
+<footer>
+  <span id="majInfo"></span>
+  <span>
+    <button class="lien admin-seul" id="btnMdp">Changer le mot de passe</button>
+    &nbsp;
+    <button class="lien" id="btnConnexion">Accès administrateur</button>
+  </span>
+</footer>
+
+<!-- Saisie d'une formation (administrateur) -->
+<dialog id="dlg">
+  <form id="frm">
+    <h2 id="frmTitre">Nouvelle formation</h2>
+    <label>Organisme
+      <select id="fOrg" required></select>
+    </label>
+    <label>Titre de la formation
+      <input id="fTitre" list="titres" required maxlength="150" autocomplete="off" placeholder="Les titres déjà utilisés par l'organisme sont proposés">
+      <datalist id="titres"></datalist>
+    </label>
+    <div>
+      <label>Créneau</label>
+      <div class="choix" id="fCreneau"></div>
+    </div>
+    <div>
+      <div class="ligne">
+        <label>Ajouter un jour <input type="date" id="fDate"></label>
+        <button type="button" id="ajDate">Ajouter</button>
+      </div>
+      <div class="dates" id="fDates" style="margin-top:8px"></div>
+      <div class="info" id="fNb" style="margin-top:4px"></div>
+    </div>
+    <label>Note libre <span class="info">(visible par tous)</span>
+      <textarea id="fNote" rows="2" maxlength="1000" placeholder="Formateur, matériel, informations pratiques…"></textarea>
+    </label>
+    <div class="alerte" id="fAlerte" hidden></div>
+    <div class="actions">
+      <button type="button" id="suppr" style="color:var(--alerte)">Supprimer</button>
+      <span>
+        <button type="button" data-fermer>Annuler</button>
+        <button type="submit" class="principal">Enregistrer</button>
+      </span>
+    </div>
+  </form>
+</dialog>
+
+<!-- Détail d'un jour (lecture) -->
+<dialog id="dlgJour">
+  <div class="corps">
+    <h2 id="jourTitre"></h2>
+    <div id="jourContenu" style="display:flex;flex-direction:column;gap:12px"></div>
+    <div class="actions">
+      <button type="button" class="admin-seul" id="jourAjout">+ Formation ce jour</button>
+      <button type="button" data-fermer class="principal">Fermer</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Organismes (administrateur) -->
+<dialog id="dlgOrgs">
+  <div class="corps">
+    <h2>Organismes de formation</h2>
+    <div class="orgs" id="listeOrgs"></div>
+    <div class="ligne">
+      <label>Nouvel organisme <input id="nOrg" maxlength="80" placeholder="Nom de l'organisme"></label>
+      <input type="color" id="nCoul" aria-label="Couleur du nouvel organisme">
+      <button type="button" id="ajOrg">Ajouter</button>
+    </div>
+    <div class="actions"><span></span><button type="button" data-fermer class="principal">Fermer</button></div>
+  </div>
+</dialog>
+
+<!-- Connexion -->
+<dialog id="dlgCnx">
+  <form id="frmCnx">
+    <h2 id="cnxTitre">Accès administrateur</h2>
+    <p class="info" id="cnxInfo"></p>
+    <label>Mot de passe <input type="password" id="cMdp" autocomplete="current-password" required></label>
+    <label id="cMdp2Bloc" hidden>Retapez le mot de passe <input type="password" id="cMdp2" autocomplete="new-password"></label>
+    <div class="alerte" id="cErr" hidden></div>
+    <div class="actions"><span></span><span>
+      <button type="button" data-fermer>Annuler</button>
+      <button type="submit" class="principal" id="cBtn">Se connecter</button>
+    </span></div>
+  </form>
+</dialog>
+
+<!-- Changement de mot de passe -->
+<dialog id="dlgMdp">
+  <form id="frmMdp">
+    <h2>Changer le mot de passe</h2>
+    <label>Mot de passe actuel <input type="password" id="mAncien" autocomplete="current-password" required></label>
+    <label>Nouveau mot de passe (10 caractères au moins) <input type="password" id="mNouv" autocomplete="new-password" minlength="10" required></label>
+    <label>Retapez le nouveau <input type="password" id="mNouv2" autocomplete="new-password" required></label>
+    <div class="alerte" id="mErr" hidden></div>
+    <div class="actions"><span></span><span>
+      <button type="button" data-fermer>Annuler</button>
+      <button type="submit" class="principal">Changer</button>
+    </span></div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const API = 'api.php';
+const CRENEAUX = [
+  {id:'journee', nom:'Journée',    couvre:['matin','apm']},
+  {id:'matin',   nom:'Matin',      couvre:['matin']},
+  {id:'apm',     nom:'Après-midi', couvre:['apm']},
+  {id:'soir',    nom:'Soirée',     couvre:['soir']},
+];
+const BANDES = [['matin','Matin','Matin'],['apm','Après-midi','AM'],['soir','Soirée','Soirée']];
+const MOIS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+const JOURS = ['lun','mar','mer','jeu','ven','sam','dim'];
+const PALETTE = ['#1f77b4','#d6731c','#2e8b57','#8e44ad','#c0392b','#16a085','#b8860b','#d63384','#34495e','#6d8f1f','#0e7490','#7c3aed'];
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const iso = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const dateDe = s => new Date(s+'T12:00');
+const lisible = s => dateDe(s).toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+const longue = s => dateDe(s).toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+const nouvelId = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+const creneau = id => CRENEAUX.find(c=>c.id===id);
+
+let D = {version:0, orgs:[], formations:[]};
+let admin = false, initialise = true;
+let vue = 'mois', curseur = new Date(); curseur.setDate(1);
+
+// Petit souvenir de la vue choisie, propre à ce navigateur.
+try { if (localStorage.getItem('occupation-vue') === 'annee') vue = 'annee'; } catch(e){}
+
+function toast(msg, err){
+  const t=$('toast'); t.textContent=msg; t.className='toast on'+(err?' err':'');
+  clearTimeout(toast.h); toast.h=setTimeout(()=>t.className='toast'+(err?' err':''), err?5000:2200);
+}
+
+async function appel(action, corps){
+  const opt = corps === undefined ? {cache:'no-store'} :
+    {method:'POST', headers:{'Content-Type':'application/json','X-Occupation':'1'}, body:JSON.stringify(corps)};
+  let r;
+  try { r = await fetch(API+'?a='+action, opt); }
+  catch(e){ throw new Error('Pas de connexion au serveur.'); }
+  let j = {}; try { j = await r.json(); } catch(e){}
+  if (!r.ok){ const err = new Error(j.erreur || ('Erreur '+r.status)); err.code = r.status; throw err; }
+  return j;
+}
+
+async function charger(){
+  const [etat, donnees] = await Promise.all([appel('etat'), appel('donnees')]);
+  admin = etat.admin; initialise = etat.initialise; D = donnees;
+  D.orgs ??= []; D.formations ??= [];
+  for (const o of D.orgs) o.titres ??= [];
+  document.body.classList.toggle('admin', admin);
+  $('btnConnexion').textContent = admin ? 'Se déconnecter' : 'Accès administrateur';
+  rendre();
+}
+
+// Enregistre l'état complet ; en cas de modification concurrente, on recharge.
+async function enregistrer(msg){
+  try {
+    const r = await appel('enregistrer', {version:D.version, donnees:{orgs:D.orgs, formations:D.formations}});
+    D.version = r.version; D.modifie = new Date().toISOString();
+    rendre(); toast(msg || 'Enregistré');
+    return true;
+  } catch(e){
+    toast(e.message, true);
+    if (e.code === 409 || e.code === 401) setTimeout(()=>charger().catch(()=>{}), 600);
+    return false;
+  }
+}
+
+const org = id => D.orgs.find(o=>o.id===id) || {nom:'Organisme supprimé', couleur:'#999999', titres:[]};
+
+// date -> bande -> [formations]
+function index(){
+  const ix = {};
+  for (const f of D.formations){
+    const c = creneau(f.creneau); if (!c) continue;
+    for (const j of f.jours) for (const b of c.couvre) ((ix[j] ??= {})[b] ??= []).push(f);
+  }
+  return ix;
+}
+
+function grilleMois(a, m){
+  const decal = (new Date(a,m,1).getDay()+6)%7, cases=[];
+  const n = Math.ceil((decal + new Date(a,m+1,0).getDate())/7)*7;
+  for (let i=0;i<n;i++) cases.push(new Date(a,m,1-decal+i));
+  return cases;
+}
+
+function legende(){
+  const utilises = new Set(D.formations.map(f=>f.org));
+  $('legende').innerHTML = D.orgs.filter(o=>utilises.has(o.id) || admin)
+    .map(o=>`<span><i class="pastille" style="background:${o.couleur}"></i>${esc(o.nom)}</span>`).join('')
+    + (D.formations.some(f=>f.jours.length) ? '<span class="doux">Chaque jour : matin / après-midi / soirée</span>' : '');
+  const v = $('msgVide');
+  if (!D.orgs.length && admin){ v.hidden=false; v.innerHTML='Commencez par créer les organismes de formation (bouton « Organismes »), puis ajoutez les formations.'; }
+  else if (!D.formations.length){ v.hidden=false; v.textContent = admin ? 'Aucune formation pour l’instant. Cliquez sur un jour ou sur « + Formation ».' : 'Aucune formation n’est encore inscrite au planning.'; }
+  else v.hidden=true;
+  $('majInfo').textContent = D.modifie ? 'Mis à jour le ' + new Date(D.modifie).toLocaleString('fr-FR',{dateStyle:'long',timeStyle:'short'}) : '';
+}
+
+function rendreMois(){
+  const a=curseur.getFullYear(), m=curseur.getMonth(), ix=index(), auj=iso(new Date());
+  $('periode').textContent = MOIS[m]+' '+a;
+  let h = JOURS.map(j=>`<div class="entete">${j}</div>`).join('');
+  for (const d of grilleMois(a,m)){
+    const k=iso(d), cl=['jour'];
+    if (d.getMonth()!==m) cl.push('hors');
+    if (d.getDay()===0||d.getDay()===6) cl.push('weekend');
+    if (k===auj) cl.push('auj');
+    h += `<div class="${cl.join(' ')}" data-jour="${k}"><span class="num">${d.getDate()}</span>`;
+    for (const [b,nom,court] of BANDES){
+      const fs = ix[k]?.[b] || [];
+      if (!fs.length){ h += `<div class="creneau vide" title="${nom} : libre">.</div>`; continue; }
+      const f = fs[0], o = org(f.org);
+      // Plusieurs organismes sur le même créneau : la bande est partagée entre leurs couleurs.
+      const fond = fs.length>1 ? `linear-gradient(90deg,${fs.map((x,i)=>`${org(x.org).couleur} ${i*100/fs.length}% ${(i+1)*100/fs.length}%`).join(',')})` : o.couleur;
+      const titre = `${nom} — ${o.nom} — ${f.titre}` + (fs.length>1 ? `\n⚠ Chevauchement avec : ${fs.slice(1).map(x=>x.titre+' ('+org(x.org).nom+')').join(', ')}` : '');
+      h += `<div class="creneau${fs.length>1?' conflit':''}" data-f="${esc(f.id)}" style="background:${fond}" title="${esc(titre)}"><small>${court}</small>${esc(f.titre)}</div>`;
+    }
+    h += '</div>';
+  }
+  const v=$('vue'); v.className='mois'; v.innerHTML=h;
+}
+
+function rendreAnnee(){
+  const a=curseur.getFullYear(), ix=index(), auj=iso(new Date());
+  $('periode').textContent = a;
+  let h='';
+  for (let m=0;m<12;m++){
+    let g = JOURS.map(j=>`<div class="e">${j[0]}</div>`).join(''), occ=0;
+    for (const d of grilleMois(a,m)){
+      if (d.getMonth()!==m){ g+='<div class="mj hors"></div>'; continue; }
+      const k=iso(d), fs = BANDES.map(([b])=>ix[k]?.[b]?.[0]);
+      const plein = fs.some(Boolean); if (plein) occ++;
+      const t = BANDES.map(([,n],i)=>fs[i]?`${n} : ${org(fs[i].org).nom} — ${fs[i].titre}`:'').filter(Boolean).join('\n');
+      g += `<div class="mj${plein?' plein':''}${k===auj?' auj':''}" title="${esc(d.getDate()+' '+MOIS[m]+(t?'\n'+t:''))}">`
+         + fs.map(f=>`<b${f?` style="background:${org(f.org).couleur}"`:''}></b>`).join('')
+         + `<i>${d.getDate()}</i></div>`;
+    }
+    h += `<div class="mini" data-mois="${m}" role="button" tabindex="0" aria-label="Voir ${MOIS[m]} ${a}"><h3>${MOIS[m]}</h3><div class="grille">${g}</div><div class="compte">${occ ? occ+' jour'+(occ>1?'s':'')+' occupé'+(occ>1?'s':'') : 'Libre'}</div></div>`;
+  }
+  const v=$('vue'); v.className='annee'; v.innerHTML=h;
+}
+
+function rendre(){ legende(); vue==='mois'?rendreMois():rendreAnnee(); }
+
+// --- Navigation ---
+$('prec').onclick=()=>{ vue==='mois'?curseur.setMonth(curseur.getMonth()-1):curseur.setFullYear(curseur.getFullYear()-1); rendre(); };
+$('suiv').onclick=()=>{ vue==='mois'?curseur.setMonth(curseur.getMonth()+1):curseur.setFullYear(curseur.getFullYear()+1); rendre(); };
+$('auj').onclick=()=>{ curseur=new Date(); curseur.setDate(1); rendre(); };
+function choisirVue(v){
+  vue=v; $('vMois').classList.toggle('actif',v==='mois'); $('vAnnee').classList.toggle('actif',v==='annee');
+  try{ localStorage.setItem('occupation-vue', v); }catch(e){}
+  rendre();
+}
+$('vMois').onclick=()=>choisirVue('mois');
+$('vAnnee').onclick=()=>choisirVue('annee');
+$('vue').addEventListener('click', e=>{
+  const mini = e.target.closest('.mini');
+  if (mini){ curseur = new Date(curseur.getFullYear(), +mini.dataset.mois, 1); choisirVue('mois'); return; }
+  const cr = e.target.closest('.creneau[data-f]');
+  const j = e.target.closest('.jour');
+  if (cr && admin){ ouvrir(D.formations.find(f=>f.id===cr.dataset.f)); return; }
+  if (!j) return;
+  // Sur téléphone, les titres ne tiennent pas : on montre toujours le détail du jour.
+  if (admin && !cr && !(index()[j.dataset.jour]) ) { ouvrir(null, j.dataset.jour); return; }
+  voirJour(j.dataset.jour);
+});
+$('vue').addEventListener('keydown', e=>{ if ((e.key==='Enter'||e.key===' ') && e.target.classList.contains('mini')){ e.preventDefault(); e.target.click(); } });
+document.querySelectorAll('[data-fermer]').forEach(b=>b.onclick=()=>b.closest('dialog').close());
+// Touches ← → pour changer de période.
+document.addEventListener('keydown', e=>{
+  if (document.querySelector('dialog[open]') || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+  if (e.key==='ArrowLeft') $('prec').click();
+  if (e.key==='ArrowRight') $('suiv').click();
+});
+
+// --- Détail d'un jour ---
+let jourOuvert = null;
+function voirJour(k){
+  jourOuvert = k;
+  const fs = D.formations.filter(f=>f.jours.includes(k))
+    .sort((a,b)=>CRENEAUX.findIndex(c=>c.id===a.creneau)-CRENEAUX.findIndex(c=>c.id===b.creneau));
+  $('jourTitre').textContent = longue(k).replace(/^./, c=>c.toUpperCase());
+  $('jourContenu').innerHTML = fs.length ? fs.map(f=>{
+    const o=org(f.org), n=f.jours.length;
+    return `<div class="detail-f" style="border-color:${o.couleur}" data-f="${esc(f.id)}">
+      <h3>${esc(f.titre)}</h3>
+      <p><b style="color:${o.couleur}">${esc(o.nom)}</b> · ${creneau(f.creneau).nom}${n>1?` · ${n} jours : ${f.jours.map(j=>dateDe(j).toLocaleDateString('fr-FR',{day:'numeric',month:'short'})).join(', ')}`:''}</p>
+      ${f.note?`<p class="note">${esc(f.note)}</p>`:''}
+      ${admin?`<button type="button" data-modif="${esc(f.id)}" style="margin-top:6px">Modifier</button>`:''}
+    </div>`;}).join('') : '<p class="info">La salle est libre ce jour-là.</p>';
+  $('dlgJour').showModal();
+}
+$('jourContenu').onclick=e=>{ const id=e.target.dataset.modif; if(id){ $('dlgJour').close(); ouvrir(D.formations.find(f=>f.id===id)); } };
+$('jourAjout').onclick=()=>{ $('dlgJour').close(); ouvrir(null, jourOuvert); };
+
+// --- Saisie d'une formation ---
+let edite=null, jours=[];
+$('fCreneau').innerHTML = CRENEAUX.map(c=>`<input type="radio" name="cr" id="cr-${c.id}" value="${c.id}"><label for="cr-${c.id}">${c.nom}</label>`).join('');
+
+function majTitres(){
+  const o = org($('fOrg').value);
+  $('titres').innerHTML = [...o.titres].sort((a,b)=>a.localeCompare(b,'fr')).map(t=>`<option value="${esc(t)}">`).join('');
+}
+function majJours(){
+  jours.sort();
+  $('fDates').innerHTML = jours.map(j=>`<span class="puce">${lisible(j)}<button type="button" data-j="${j}" aria-label="Retirer ce jour">×</button></span>`).join('');
+  $('fNb').textContent = jours.length ? `${jours.length} jour${jours.length>1?'s':''}` : 'Aucun jour choisi : ajoutez au moins un jour.';
+  verifier();
+}
+function verifier(){
+  const cr = document.querySelector('input[name=cr]:checked')?.value, a=$('fAlerte');
+  const msgs = new Set();
+  if (cr){
+    const ix=index();
+    for (const j of jours) for (const b of creneau(cr).couvre) for (const f of (ix[j]?.[b]||[])){
+      if (edite && f.id===edite.id) continue;
+      msgs.add(`${lisible(j)} : déjà « ${esc(f.titre)} » (${esc(org(f.org).nom)}, ${creneau(f.creneau).nom.toLowerCase()})`);
+    }
+  }
+  a.hidden = !msgs.size;
+  a.innerHTML = msgs.size ? '<b>Attention, la salle est déjà occupée :</b><br>'+[...msgs].join('<br>')+'<br>Vous pouvez quand même enregistrer.' : '';
+}
+function ouvrir(f, jour){
+  if (!D.orgs.length){ toast('Créez d’abord un organisme.', true); ouvrirOrgs(); return; }
+  edite=f;
+  $('frmTitre').textContent = f?'Modifier la formation':'Nouvelle formation';
+  $('fOrg').innerHTML = D.orgs.map(o=>`<option value="${esc(o.id)}">${esc(o.nom)}</option>`).join('');
+  $('fOrg').value = f ? f.org : (ouvrir.dernierOrg && D.orgs.some(o=>o.id===ouvrir.dernierOrg) ? ouvrir.dernierOrg : D.orgs[0].id);
+  $('fTitre').value = f?f.titre:'';
+  document.querySelectorAll('input[name=cr]').forEach(r=>r.checked = r.value===(f?f.creneau:'journee'));
+  $('fNote').value = f?f.note:'';
+  jours = f?[...f.jours]:(jour?[jour]:[]);
+  $('fDate').value = jour || (f ? f.jours[f.jours.length-1] : '');
+  $('suppr').style.visibility = f?'visible':'hidden';
+  majTitres(); majJours(); $('dlg').showModal();
+}
+$('btnAjout').onclick=()=>ouvrir(null);
+$('fOrg').onchange=majTitres;
+$('fCreneau').onchange=verifier;
+function ajouterDate(){ const v=$('fDate').value; if(v && !jours.includes(v)){ jours.push(v); majJours(); } }
+$('ajDate').onclick=ajouterDate;
+$('fDate').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); ajouterDate(); } });
+$('fDates').onclick=e=>{ const j=e.target.dataset.j; if(j){ jours=jours.filter(x=>x!==j); majJours(); } };
+$('suppr').onclick=async()=>{
+  if (!edite || !confirm(`Supprimer « ${edite.titre} » du planning ?`)) return;
+  const avant = D.formations;
+  D.formations = D.formations.filter(f=>f.id!==edite.id);
+  $('dlg').close();
+  if (!await enregistrer('Formation supprimée')) D.formations = avant;
+};
+$('frm').onsubmit=async e=>{
+  e.preventDefault();
+  // Une date tapée mais pas encore « ajoutée » compte quand même.
+  if ($('fDate').value && !jours.length) jours.push($('fDate').value);
+  if (!jours.length){ toast('Choisissez au moins un jour.', true); return; }
+  const v = { org:$('fOrg').value, titre:$('fTitre').value.trim(), creneau:document.querySelector('input[name=cr]:checked').value,
+              jours:[...jours].sort(), note:$('fNote').value.trim() };
+  if (!v.titre){ toast('Indiquez le titre de la formation.', true); return; }
+  const sauve = JSON.stringify(D);
+  if (edite) Object.assign(edite, v); else D.formations.push({id:nouvelId('f'), ...v});
+  const o = D.orgs.find(o=>o.id===v.org);
+  if (o && !o.titres.includes(v.titre)) o.titres.push(v.titre);   // mémoire des titres par organisme
+  ouvrir.dernierOrg = v.org;
+  $('dlg').close();
+  if (!await enregistrer(edite ? 'Formation modifiée' : 'Formation ajoutée')) D = JSON.parse(sauve);
+};
+
+// --- Organismes ---
+function couleurLibre(){ const pris=new Set(D.orgs.map(o=>o.couleur)); return PALETTE.find(c=>!pris.has(c)) || PALETTE[D.orgs.length % PALETTE.length]; }
+function ouvrirOrgs(){ rendreOrgs(); $('nCoul').value = couleurLibre(); $('dlgOrgs').showModal(); }
+function rendreOrgs(){
+  $('listeOrgs').innerHTML = D.orgs.length ? D.orgs.map(o=>{
+    const n = D.formations.filter(f=>f.org===o.id).length;
+    return `<div class="org" data-o="${esc(o.id)}">
+      <div class="haut">
+        <input type="color" value="${o.couleur}" data-champ="couleur" aria-label="Couleur de ${esc(o.nom)}">
+        <input type="text" value="${esc(o.nom)}" data-champ="nom" maxlength="80" aria-label="Nom">
+        <button type="button" data-supp-org title="${n?'Impossible : '+n+' formation(s) au planning':'Supprimer cet organisme'}" ${n?'disabled':''}>Supprimer</button>
+      </div>
+      <details><summary>${o.titres.length} titre${o.titres.length>1?'s':''} en mémoire · ${n} formation${n>1?'s':''} au planning</summary>
+        <div class="dates" style="margin-top:6px">${o.titres.map((t,i)=>`<span class="puce">${esc(t)}<button type="button" data-supp-titre="${i}" aria-label="Oublier ce titre">×</button></span>`).join('') || '<span class="info">Aucun titre pour l’instant.</span>'}</div>
+      </details>
+    </div>`;}).join('') : '<p class="info">Aucun organisme. Ajoutez le premier ci-dessous.</p>';
+}
+$('btnOrgs').onclick=ouvrirOrgs;
+$('listeOrgs').addEventListener('change', async e=>{
+  const bloc=e.target.closest('.org'), o=D.orgs.find(o=>o.id===bloc?.dataset.o), champ=e.target.dataset.champ;
+  if (!o || !champ) return;
+  const val=e.target.value.trim(); if (!val){ e.target.value=o[champ]; return; }
+  const avant=o[champ]; o[champ]=val;
+  if (!await enregistrer('Organisme modifié')){ o[champ]=avant; rendreOrgs(); }
+});
+$('listeOrgs').addEventListener('click', async e=>{
+  const bloc=e.target.closest('.org'), o=D.orgs.find(o=>o.id===bloc?.dataset.o); if(!o) return;
+  if (e.target.dataset.suppTitre !== undefined){
+    const i=+e.target.dataset.suppTitre, t=o.titres[i];
+    o.titres.splice(i,1);
+    if (await enregistrer('Titre oublié')) rendreOrgs(); else o.titres.splice(i,0,t);
+    $('listeOrgs').querySelector(`[data-o="${CSS.escape(o.id)}"] details`)?.setAttribute('open','');
+  }
+  if (e.target.hasAttribute('data-supp-org') && confirm(`Supprimer l'organisme « ${o.nom} » ?`)){
+    const avant=D.orgs; D.orgs=D.orgs.filter(x=>x!==o);
+    if (await enregistrer('Organisme supprimé')) rendreOrgs(); else D.orgs=avant;
+  }
+});
+$('ajOrg').onclick=async()=>{
+  const nom=$('nOrg').value.trim(); if(!nom){ $('nOrg').focus(); return; }
+  if (D.orgs.some(o=>o.nom.toLowerCase()===nom.toLowerCase())){ toast('Cet organisme existe déjà.', true); return; }
+  const o={id:nouvelId('o'), nom, couleur:$('nCoul').value, titres:[]};
+  D.orgs.push(o);
+  if (await enregistrer('Organisme ajouté')){ $('nOrg').value=''; $('nCoul').value=couleurLibre(); rendreOrgs(); }
+  else D.orgs.pop();
+};
+$('nOrg').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); $('ajOrg').click(); } });
+
+// --- Connexion ---
+function ouvrirConnexion(){
+  $('cErr').hidden=true; $('cMdp').value=''; $('cMdp2').value='';
+  $('cMdp2Bloc').hidden = initialise;
+  $('cMdp').autocomplete = initialise ? 'current-password' : 'new-password';
+  $('cnxTitre').textContent = initialise ? 'Accès administrateur' : 'Créer le mot de passe administrateur';
+  $('cnxInfo').textContent = initialise ? 'Réservé à la personne qui tient le planning.' : 'Première visite : choisissez le mot de passe qui protégera la saisie (10 caractères au moins). Notez-le en lieu sûr.';
+  $('cBtn').textContent = initialise ? 'Se connecter' : 'Créer et se connecter';
+  $('dlgCnx').showModal(); $('cMdp').focus();
+}
+$('btnConnexion').onclick=async()=>{
+  if (!admin) return ouvrirConnexion();
+  try { await appel('deconnexion', {}); } catch(e){}
+  await charger(); toast('Déconnecté');
+};
+$('frmCnx').onsubmit=async e=>{
+  e.preventDefault();
+  const m=$('cMdp').value, err=$('cErr'); err.hidden=true;
+  if (!initialise && m!==$('cMdp2').value){ err.hidden=false; err.textContent='Les deux mots de passe ne sont pas identiques.'; return; }
+  $('cBtn').disabled=true;
+  try {
+    await appel(initialise?'connexion':'initialiser', {motdepasse:m});
+    $('dlgCnx').close(); await charger(); toast('Connecté : vous pouvez modifier le planning');
+    history.replaceState(null,'',location.pathname);
+  } catch(x){ err.hidden=false; err.textContent=x.message; }
+  finally { $('cBtn').disabled=false; }
+};
+$('btnMdp').onclick=()=>{ ['mAncien','mNouv','mNouv2'].forEach(i=>$(i).value=''); $('mErr').hidden=true; $('dlgMdp').showModal(); };
+$('frmMdp').onsubmit=async e=>{
+  e.preventDefault(); const err=$('mErr'); err.hidden=true;
+  if ($('mNouv').value!==$('mNouv2').value){ err.hidden=false; err.textContent='Les deux nouveaux mots de passe ne sont pas identiques.'; return; }
+  try { await appel('changer_mdp',{ancien:$('mAncien').value, nouveau:$('mNouv').value}); $('dlgMdp').close(); toast('Mot de passe changé'); }
+  catch(x){ err.hidden=false; err.textContent=x.message; }
+};
+
+// --- Démarrage ---
+$('vMois').classList.toggle('actif',vue==='mois'); $('vAnnee').classList.toggle('actif',vue==='annee');
+charger().then(()=>{ if (/[?&]admin\b/.test(location.search) && !admin) ouvrirConnexion(); })
+  .catch(e=>{ $('vue').innerHTML=`<div class="vide-msg">Le planning n'a pas pu être chargé : ${esc(e.message)}</div>`; });
+// Rafraîchit le planning quand on revient sur l'onglet (pour voir les dernières modifications).
+document.addEventListener('visibilitychange', ()=>{ if (!document.hidden && !document.querySelector('dialog[open]')) charger().catch(()=>{}); });
+</script>
+</body>
+</html>
