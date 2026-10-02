@@ -5,7 +5,7 @@ But : retrouver d'un coup d'œil qui occupe la salle, quand, et pour quelle form
 Porteur : Dr Franck Moyal.
 
 Dossier : `~/Desktop/Claude-Projects/PLANNING-FORMATION`.
-Dépôt : à créer (`git@github.com:drfranckmoyal-cloud/<NOM>.git`, privé).
+Dépôt : `git@github.com:drfranckmoyal-cloud/Occupation.git` (privé).
 
 **À lire en premier par toute conversation qui reprend le projet.** À tenir à jour à chaque étape,
 puis commit et push dans la foulée.
@@ -14,7 +14,7 @@ puis commit et push dans la foulée.
 
 | Étape | Contenu | État |
 |---|---|---|
-| 0 | Fichier maître, dépôt git local | Fait (02/10/2026) |
+| 0 | Fichier maître, dépôt git, GitHub | Fait (02/10/2026) |
 | 1 | Cadrage : qui saisit, qui consulte, où ça vit | En cours |
 | 2 | Maquette visuelle (vue mois, vue année) validée par Franck | À faire |
 | 3 | Construction de l'outil | À faire |
@@ -44,6 +44,11 @@ puis commit et push dans la foulée.
 - D3 (02/10) **Chevauchement = simple alerte** : l'outil prévient, mais laisse enregistrer.
 - D4 (02/10) **Dates libres** pour une formation de plusieurs jours : on choisit les jours un par un
   (le « nombre de jours » du cahier des charges se déduit des jours cochés).
+- D5 (02/10) **Organismes créés par Franck dans l'application** (nom + couleur), pas de liste figée dans le code.
+- D6 (02/10) **Une seule salle.**
+- D7 (02/10) Par formation : organisme, titre, créneau, jours, **et une note libre**.
+- D8 (02/10) **Hébergement sur le compte Hostinger de Franck** (sous-domaine type `planning.drfranckmoyal.fr`
+  à confirmer) : consultation publique par lien, saisie derrière le mot de passe de Franck.
 
 ## Questions ouvertes
 
@@ -52,17 +57,19 @@ puis commit et push dans la foulée.
 | Q1 | Qui saisit les réservations : Franck seul, ou chaque organisme ? | Franck | Franck seul (D1) |
 | Q2 | Qui consulte, et sur quoi (ordinateur, téléphone) ? | Franck | |
 | Q3 | Où vit l'outil (page web en ligne, Google Sheet, fichier sur le Mac…) ? | Franck, sur proposition de Claude | Page web partagée (D2) |
-| Q4 | Combien d'organismes, lesquels, quelles couleurs ? | Franck | |
+| Q4 | Combien d'organismes, lesquels, quelles couleurs ? | Franck | Créés par Franck dans l'application (D5) |
 | Q5 | Que faire si deux formations tombent sur le même créneau (blocage ou simple alerte) ? | Franck | Alerte seulement (D3) |
 | Q6 | Les jours d'une formation sur plusieurs jours sont-ils toujours consécutifs ? Week-ends inclus ? | Franck | Dates libres (D4) |
-| Q7 | Une seule salle, ou plusieurs à terme ? | Franck | |
-| Q8 | Faut-il d'autres infos (formateur, nombre de participants, contact) ? | Franck | |
+| Q7 | Une seule salle, ou plusieurs à terme ? | Franck | Une seule (D6) |
+| Q8 | Faut-il d'autres infos (formateur, nombre de participants, contact) ? | Franck | Note libre (D7) |
+| Q9 | Afficher les horaires des créneaux (ex. matin 9 h–12 h 30) ou seulement les mots ? | Franck | |
+| Q10 | Adresse exacte de la page (sous-domaine) | Franck | |
 
 ## Journal
 
 - **02/10/2026** — Lancement. Franck pose le cahier des charges (ci-dessus). Création du dossier,
   du dépôt git local et de ce fichier. Début du cadrage.
-  Premières réponses de Franck : D1 à D4.
+  Premières réponses de Franck : D1 à D4, puis D5 à D8. Dépôt GitHub `Occupation` créé par Franck.
 
 ## Garde-fous
 
