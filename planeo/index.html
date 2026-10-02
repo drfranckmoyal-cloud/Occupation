@@ -45,10 +45,12 @@
   .creneau{flex:1;border-radius:5px;background:var(--libre);font-size:11.5px;color:#fff;padding:2px 5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;min-height:22px}
   .creneau.vide{color:transparent}
   .creneau small{opacity:.85;margin-right:4px}
-  /* Deux formations ou plus sur le même créneau : bande blanche lisible, bord rouge,
-     une pastille par organisme. Le détail s'ouvre au clic. */
-  .creneau.conflit{background:#fff!important;color:var(--alerte);border:2px solid var(--alerte);font-weight:600;display:flex;align-items:center;gap:3px;padding:1px 4px}
-  .creneau.conflit i{width:8px;height:8px;border-radius:50%;flex:none}
+  /* Deux formations ou plus sur le même créneau : la bande se partage, chaque formation
+     garde sa couleur et son titre et se sélectionne d'un clic ; le cadre rouge signale
+     la superposition. */
+  .creneau.conflit{background:none;padding:0;display:flex;gap:2px;outline:2px solid var(--alerte);outline-offset:1px}
+  .creneau.conflit .seg{flex:1;min-width:0;border-radius:4px;padding:2px 4px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:#fff;cursor:pointer}
+  .creneau.conflit .seg:hover,.creneau:not(.vide):not(.conflit):hover{filter:brightness(1.12);box-shadow:0 0 0 2px var(--texte) inset}
   /* Fermetures : congés (salle fermée) et fermeture possible (à confirmer). */
   .ferm{font-size:10.5px;font-weight:600;border-radius:4px;padding:1px 5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .ferm.conges{background:#5b6270;color:#fff}
@@ -429,8 +431,7 @@ function rendreMois(){
       if (!fs.length){ h += `<div class="creneau vide" title="${nom} : libre">.</div>`; continue; }
       if (fs.length>1){
         // Superposition : une bande lisible qui le dit, le détail s'ouvre au clic sur le jour.
-        const titre = `⚠ ${nom} : ${fs.length} formations en même temps\n` + fs.map(x=>`• ${x.titre} (${org(x.org).nom})`).join('\n');
-        h += `<div class="creneau conflit" title="${esc(titre)}"><small>${court}</small>⚠ ${fs.length} en même temps ${fs.map(x=>`<i style="background:${org(x.org).couleur}"></i>`).join('')}</div>`;
+        h += `<div class="creneau conflit">` + fs.map((x,i)=>`<span class="seg" data-f="${esc(x.id)}" style="background:${org(x.org).couleur}" title="${esc(`⚠ ${nom} : ${fs.length} formations en même temps\n${org(x.org).nom} — ${x.titre}`)}">${i?'':`<small>${court}</small>`}${esc(x.titre)}</span>`).join('') + `</div>`;
         continue;
       }
       const f = fs[0], o = org(f.org);
@@ -481,7 +482,7 @@ $('vAnnee').onclick=()=>choisirVue('annee');
 $('vue').addEventListener('click', e=>{
   const mini = e.target.closest('.mini');
   if (mini){ curseur = new Date(curseur.getFullYear(), +mini.dataset.mois, 1); choisirVue('mois'); return; }
-  const cr = e.target.closest('.creneau[data-f]');
+  const cr = e.target.closest('[data-f]');
   const j = e.target.closest('.jour');
   if (cr && admin){ ouvrir(D.formations.find(f=>f.id===cr.dataset.f)); return; }
   if (!j) return;

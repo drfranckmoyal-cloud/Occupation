@@ -75,9 +75,9 @@ puis commit et push dans la foulée.
   gardée en archive. Notice serveur : `deploiement/LISEZ-MOI.md`.
 - D19 (02/10) **L'annexe planning.drfranckmoyal.fr est retirée** (DNS OVH, sous-domaine et dossier
   Hostinger) : rien de Planéo ne reste sur drfranckmoyal.fr. Planéo vit uniquement sur le portail.
-- D20 (02/10) **Superpositions lisibles** : quand plusieurs formations partagent un créneau, la bande
-  affiche « ⚠ N en même temps » sur fond blanc bordé de rouge, avec une pastille par organisme ; le
-  détail s'ouvre au clic (vue année : bande rayée aux couleurs concernées).
+- D20 (02/10, revu le même jour à la demande de Franck) **Superpositions** : quand plusieurs formations
+  partagent un créneau, la bande se partage côte à côte, chaque formation garde sa couleur et son titre et
+  s'ouvre d'un clic ; un cadre rouge signale la superposition (vue année : bande rayée aux couleurs).
 - D21 (02/10) **Fermetures** (bouton « Fermetures ») : deux types, **Congés** (salle fermée, hachuré gris)
   et **Fermeture possible** (à confirmer, hachuré orange), jours au choix, note. Les **jours fériés**
   français sont calculés et affichés d'office. Alerte si une formation tombe un jour fermé ou férié.
