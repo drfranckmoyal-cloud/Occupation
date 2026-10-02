@@ -1,4 +1,4 @@
-# Planning de la salle de formation — Fichier maître
+# Planéo — planning de la salle de formation — Fichier maître
 
 Planning partagé de la salle de formation, utilisée par plusieurs organismes de formation.
 But : retrouver d'un coup d'œil qui occupe la salle, quand, et pour quelle formation.
@@ -60,6 +60,13 @@ puis commit et push dans la foulée.
   jamais dans le dépôt. 10 essais ratés en 15 min bloquent l'accès un quart d'heure.
 - D15 (02/10) Franck gère seul tous les organismes : aucun accès à créer pour eux. Le lien public
   reste disponible, le partager ou non est à sa main.
+- D16 (02/10) **Nom : Planéo** (choisi par Franck). Dépôt et dossier gardent leur nom (`Occupation`,
+  `PLANNING-FORMATION`).
+- D17 (02/10) **Intégration au portail CEMEDIS Formations** (https://163-172-8-49.nip.io/portail, page
+  statique `/var/www/portail/index.html` sur le serveur Scaleway de DFM) : une 3e carte « Planéo » qui
+  ouvre planning.drfranckmoyal.fr. Planéo reste chez Hostinger avec son mot de passe propre (choix de
+  Franck, contre un déménagement sur le serveur DFM). Lien « Portail CEMEDIS » en bas de Planéo, pour
+  l'administrateur seulement.
 - D14 (02/10) Un chevauchement apparaît en deux couleurs, entouré de rouge.
 
 ## Questions ouvertes
@@ -127,6 +134,9 @@ sous-domaine, « Extract » avec `.` et « Overwrite existing files », puis met
   indexable. Reste : Franck crée son mot de passe (`/?admin`), puis premier enregistrement à vérifier.
 - **02/10/2026** — Franck crée son mot de passe, 3 organismes et 2 premières formations. Vérifié côté
   serveur : version 6, données bien enregistrées, mot de passe en place. Mise en service terminée.
+- **02/10/2026** — Intégration au portail CEMEDIS Formations (D17) et nom Planéo (D16). Carte préparée,
+  copie d'essai déposée à `/portail/essai-salle.html` sur le serveur DFM. Mise en ligne de la carte et
+  de la nouvelle version de Planéo en attente de l'accord explicite de Franck.
 
 ## Garde-fous
 
