@@ -39,18 +39,22 @@ puis commit et push dans la foulée.
 
 ## Décisions
 
-_(numérotées D1, D2… au fil du cadrage)_
+- D1 (02/10) **Franck seul saisit** les réservations. Les organismes consultent, sans pouvoir modifier.
+- D2 (02/10) **Page web partagée** : un lien, lisible sur ordinateur et téléphone, la même version pour tous.
+- D3 (02/10) **Chevauchement = simple alerte** : l'outil prévient, mais laisse enregistrer.
+- D4 (02/10) **Dates libres** pour une formation de plusieurs jours : on choisit les jours un par un
+  (le « nombre de jours » du cahier des charges se déduit des jours cochés).
 
 ## Questions ouvertes
 
 | # | Question | Qui tranche | Réponse |
 |---|---|---|---|
-| Q1 | Qui saisit les réservations : Franck seul, ou chaque organisme ? | Franck | |
+| Q1 | Qui saisit les réservations : Franck seul, ou chaque organisme ? | Franck | Franck seul (D1) |
 | Q2 | Qui consulte, et sur quoi (ordinateur, téléphone) ? | Franck | |
-| Q3 | Où vit l'outil (page web en ligne, Google Sheet, fichier sur le Mac…) ? | Franck, sur proposition de Claude | |
+| Q3 | Où vit l'outil (page web en ligne, Google Sheet, fichier sur le Mac…) ? | Franck, sur proposition de Claude | Page web partagée (D2) |
 | Q4 | Combien d'organismes, lesquels, quelles couleurs ? | Franck | |
-| Q5 | Que faire si deux formations tombent sur le même créneau (blocage ou simple alerte) ? | Franck | |
-| Q6 | Les jours d'une formation sur plusieurs jours sont-ils toujours consécutifs ? Week-ends inclus ? | Franck | |
+| Q5 | Que faire si deux formations tombent sur le même créneau (blocage ou simple alerte) ? | Franck | Alerte seulement (D3) |
+| Q6 | Les jours d'une formation sur plusieurs jours sont-ils toujours consécutifs ? Week-ends inclus ? | Franck | Dates libres (D4) |
 | Q7 | Une seule salle, ou plusieurs à terme ? | Franck | |
 | Q8 | Faut-il d'autres infos (formateur, nombre de participants, contact) ? | Franck | |
 
@@ -58,6 +62,7 @@ _(numérotées D1, D2… au fil du cadrage)_
 
 - **02/10/2026** — Lancement. Franck pose le cahier des charges (ci-dessus). Création du dossier,
   du dépôt git local et de ce fichier. Début du cadrage.
+  Premières réponses de Franck : D1 à D4.
 
 ## Garde-fous
 
