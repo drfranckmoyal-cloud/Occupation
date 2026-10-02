@@ -18,7 +18,7 @@ puis commit et push dans la foulée.
 | 1 | Cadrage : qui saisit, qui consulte, où ça vit | Fait (02/10/2026) |
 | 2 | Maquette visuelle (vue mois, vue année) | Faite ; Franck demande la construction complète |
 | 3 | Construction de l'outil (`site/`) | Fait, essayé sur le Mac (02/10/2026) |
-| 4 | Mise en ligne sur planning.drfranckmoyal.fr | **En ligne** (02/10/2026) ; reste : mot de passe créé par Franck |
+| 4 | Mise en ligne sur planning.drfranckmoyal.fr | **En service** (02/10/2026) : mot de passe créé, premiers enregistrements vérifiés |
 
 ## Cahier des charges initial (Franck, 02/10/2026)
 
@@ -125,6 +125,8 @@ sous-domaine, « Extract » avec `.` et « Overwrite existing files », puis met
   à la corbeille. Vérifié en ligne : page 200, `donnees/` et `.htaccess` refusés (403), écriture sans
   connexion refusée (401), en-tête manquant refusé (403), mot de passe trop court refusé, page non
   indexable. Reste : Franck crée son mot de passe (`/?admin`), puis premier enregistrement à vérifier.
+- **02/10/2026** — Franck crée son mot de passe, 3 organismes et 2 premières formations. Vérifié côté
+  serveur : version 6, données bien enregistrées, mot de passe en place. Mise en service terminée.
 
 ## Garde-fous
 
