@@ -87,6 +87,10 @@ puis commit et push dans la foulée.
 - D23 (02/10) **Le mois et la date au centre** : bandeau central dans l'en-tête fixe, mois en très grand
   (année en bleu), grosses flèches de part et d'autre, « Aujourd'hui : <date du jour> » dessous (clic =
   retour au mois courant). Numéros des jours agrandis, jour courant encadré.
+- D24 (02/10) **Survol en vue année** : passer la souris sur un jour occupé éclaire ce jour et tous les
+  jours de la ou des formations concernées (le reste s'atténue) ; une bulle annonce pour chacune
+  l'organisme, le titre, le créneau et les dates regroupées par mois, plus superposition, fermeture ou
+  jour férié s'il y a lieu. Un clic ouvre toujours le mois.
 - D14 (02/10) Un chevauchement apparaît en deux couleurs, entouré de rouge.
 
 ## Questions ouvertes

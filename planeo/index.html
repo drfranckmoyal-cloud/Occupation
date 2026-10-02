@@ -85,6 +85,18 @@
   .mj.m-fermeture{background:repeating-linear-gradient(135deg,#f0c27a 0 2px,#fdf0d8 2px 4px)}
   .mj.m-ferie i{color:var(--alerte);font-weight:700}
   .mini .compte{font-size:12px;color:var(--doux);margin-top:6px}
+  /* Survol en vue année : le jour et tous les jours de la même formation s'éclairent,
+     une bulle annonce organisme, formation et dates. */
+  .annee.survol .mj:not(.sur):not(.hors){opacity:.35}
+  .mj.sur{opacity:1;outline:2px solid var(--texte);outline-offset:0;z-index:2;transform:scale(1.18)}
+  .mj{transition:opacity .12s,transform .12s}
+  .bulle{position:fixed;z-index:30;pointer-events:none;background:var(--carte);color:var(--texte);border:1px solid var(--trait);border-radius:10px;box-shadow:0 10px 30px #0002;padding:10px 12px;max-width:320px;font-size:13px;line-height:1.35}
+  .bulle .jr{font-weight:700;margin-bottom:6px}
+  .bulle .bf{border-left:4px solid;padding:2px 0 2px 8px;margin-top:6px}
+  .bulle .bf b{display:block;font-size:14px}
+  .bulle .bf .org{font-weight:700}
+  .bulle .bf .dt{color:var(--doux)}
+  .bulle .bx{color:var(--doux);margin-top:4px}
 
   /* Fenêtres */
   dialog{border:none;border-radius:14px;padding:0;width:min(520px,94vw);box-shadow:0 20px 50px #0003;color:var(--texte);background:var(--carte)}
@@ -296,6 +308,7 @@
 
 
 <div class="toast" id="toast" role="status"></div>
+<div class="bulle" id="bulle" hidden></div>
 
 <script>
 const API = 'api/';
@@ -471,7 +484,7 @@ function rendreAnnee(){
         .concat(BANDES.map(([,n],i)=>tous[i].length?`${n} : `+tous[i].map(f=>`${org(f.org).nom} — ${f.titre}`).join(' + '):'')).filter(Boolean).join('\n');
       // Superposition : bande rayée aux couleurs des organismes concernés.
       const fond = l => l.length>1 ? `repeating-linear-gradient(90deg,${l.map((f,i)=>`${org(f.org).couleur} ${i*3}px ${(i+1)*3}px`).join(',')})` : org(l[0].org).couleur;
-      g += `<div class="mj${plein?' plein':''}${k===auj?' auj':''}${fe?' m-'+fe.type:''}${fer?' m-ferie':''}" title="${esc(d.getDate()+' '+MOIS[m]+(t?'\n'+t:''))}">`
+      g += `<div class="mj${plein?' plein':''}${k===auj?' auj':''}${fe?' m-'+fe.type:''}${fer?' m-ferie':''}" data-jour="${k}">`
          + tous.map(l=>`<b${l.length?` style="background:${fond(l)}"`:''}></b>`).join('')
          + `<i>${d.getDate()}</i></div>`;
     }
@@ -480,7 +493,7 @@ function rendreAnnee(){
   const v=$('vue'); v.className='annee'; v.innerHTML=h;
 }
 
-function rendre(){ legende(); vue==='mois'?rendreMois():rendreAnnee(); }
+function rendre(){ finSurvol(); legende(); vue==='mois'?rendreMois():rendreAnnee(); }
 
 // --- Navigation ---
 $('prec').onclick=()=>{ vue==='mois'?curseur.setMonth(curseur.getMonth()-1):curseur.setFullYear(curseur.getFullYear()-1); rendre(); };
@@ -518,6 +531,60 @@ document.addEventListener('keydown', e=>{
   if (e.key==='ArrowLeft') $('prec').click();
   if (e.key==='ArrowRight') $('suiv').click();
 });
+
+// --- Survol en vue année ---
+// Dates d'une formation regroupées par mois : « 28, 29 oct. · 4 nov. 2026 »
+function datesCourtes(js){
+  const g = [];
+  for (const j of [...js].sort()){
+    const d = dateDe(j), cle = j.slice(0,7), dernier = g[g.length-1];
+    if (dernier && dernier.cle===cle) dernier.n.push(d.getDate());
+    else g.push({cle, n:[d.getDate()], m:d.toLocaleDateString('fr-FR',{month:'short'}), a:d.getFullYear()});
+  }
+  const an = new Set(g.map(x=>x.a)).size>1;
+  return g.map((x,i)=>`${x.n.join(', ')} ${x.m}${an||i===g.length-1?' '+x.a:''}`).join(' · ');
+}
+function finSurvol(){
+  $('bulle').hidden = true;
+  $('vue').classList.remove('survol');
+  document.querySelectorAll('.mj.sur').forEach(x=>x.classList.remove('sur'));
+}
+function survol(e){
+  if (vue!=='annee') return;
+  const c = e.target.closest('.mj[data-jour]');
+  if (!c){ finSurvol(); return; }
+  const k = c.dataset.jour, fs = D.formations.filter(f=>f.jours.includes(k))
+    .sort((a,b)=>CRENEAUX.findIndex(x=>x.id===a.creneau)-CRENEAUX.findIndex(x=>x.id===b.creneau));
+  const fe = indexF()[k], fer = ferie(k);
+  if (!fs.length && !fe && !fer){ finSurvol(); return; }
+  // Éclaire le jour survolé et tous les jours des formations concernées.
+  const tous = new Set([k, ...fs.flatMap(f=>f.jours)]);
+  document.querySelectorAll('.mj[data-jour]').forEach(x=>x.classList.toggle('sur', tous.has(x.dataset.jour)));
+  $('vue').classList.toggle('survol', fs.length>0);
+  const b = $('bulle');
+  b.innerHTML = `<div class="jr">${longue(k).replace(/^./, c=>c.toUpperCase())}</div>`
+    + fs.map(f=>{ const o=org(f.org); return `<div class="bf" style="border-color:${o.couleur}">
+        <span class="org" style="color:${o.couleur}">${esc(o.nom)}</span><b>${esc(f.titre)}</b>
+        <span class="dt">${creneau(f.creneau).nom} · ${f.jours.length} jour${f.jours.length>1?'s':''} : ${datesCourtes(f.jours)}</span></div>`; }).join('')
+    + (fs.length>1 && fs.some((f,i)=>fs.some((g,j)=>i<j && creneau(f.creneau).couvre.some(x=>creneau(g.creneau).couvre.includes(x)))) ? '<div class="bx" style="color:var(--alerte)">⚠ Superposition sur un même créneau</div>' : '')
+    + (fe ? `<div class="bx">${TYPES_F[fe.type]}${fe.note?' — '+esc(fe.note):''}</div>` : '')
+    + (fer ? `<div class="bx" style="color:var(--alerte)">Jour férié : ${fer}</div>` : '');
+  b.hidden = false;
+  placerBulle(e);
+}
+$('vue').addEventListener('mouseover', survol);
+function placerBulle(e){
+  const b = $('bulle'); if (b.hidden) return;
+  const w = b.offsetWidth, h = b.offsetHeight;
+  let x = e.clientX + 16, y = e.clientY + 16;
+  if (x + w > innerWidth - 8) x = e.clientX - w - 16;
+  if (y + h > innerHeight - 8) y = e.clientY - h - 16;
+  b.style.left = Math.max(8,x)+'px'; b.style.top = Math.max(8,y)+'px';
+}
+// Après un défilement la bulle se cache ; elle revient au premier mouvement de souris.
+$('vue').addEventListener('mousemove', e=>{ $('bulle').hidden ? survol(e) : placerBulle(e); });
+$('vue').addEventListener('mouseleave', finSurvol);
+window.addEventListener('scroll', finSurvol, {passive:true});
 
 // --- Détail d'un jour ---
 let jourOuvert = null;
