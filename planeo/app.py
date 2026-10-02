@@ -29,6 +29,7 @@ FICHIER = os.path.join(DONNEES, "occupation.json")
 SAUVEGARDES = os.path.join(DONNEES, "sauvegardes")
 GARDER_SAUVEGARDES = 200
 CRENEAUX = {"journee", "matin", "apm", "soir"}
+TYPES_FERMETURE = {"conges", "fermeture"}   # congés = salle fermée ; fermeture = possible, à confirmer
 VERROU = threading.Lock()
 
 
@@ -164,7 +165,26 @@ def valider(d):
         fids.add(i)
         forms.append({"id": i, "org": org, "titre": titre, "creneau": cr,
                       "jours": jours, "note": _texte(f.get("note"), 1000)})
-    return {"orgs": orgs, "formations": forms}
+    ferms, cids = [], set()
+    for f in (d.get("fermetures") or [])[:1000]:
+        if not isinstance(f, dict):
+            continue
+        jours = []
+        for j in (f.get("jours") or [])[:366]:
+            j = _texte(j, 10)
+            try:
+                date.fromisoformat(j)
+            except ValueError:
+                continue
+            if re.fullmatch(r"\d{4}-\d{2}-\d{2}", j) and j not in jours:
+                jours.append(j)
+        jours.sort()
+        i, t = _texte(f.get("id"), 40), _texte(f.get("type"), 12)
+        if not i or i in cids or t not in TYPES_FERMETURE or not jours:
+            raise Invalide("Fermeture invalide.")
+        cids.add(i)
+        ferms.append({"id": i, "type": t, "jours": jours, "note": _texte(f.get("note"), 200)})
+    return {"orgs": orgs, "formations": forms, "fermetures": ferms}
 
 
 @app.get("/api/donnees")

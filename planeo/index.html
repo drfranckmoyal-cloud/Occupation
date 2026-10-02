@@ -44,8 +44,19 @@
   .num{font-size:12px;font-weight:600;align-self:flex-start}
   .creneau{flex:1;border-radius:5px;background:var(--libre);font-size:11.5px;color:#fff;padding:2px 5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;min-height:22px}
   .creneau.vide{color:transparent}
-  .creneau.conflit{outline:2px solid var(--alerte);outline-offset:-2px}
   .creneau small{opacity:.85;margin-right:4px}
+  /* Deux formations ou plus sur le même créneau : bande blanche lisible, bord rouge,
+     une pastille par organisme. Le détail s'ouvre au clic. */
+  .creneau.conflit{background:#fff!important;color:var(--alerte);border:2px solid var(--alerte);font-weight:600;display:flex;align-items:center;gap:3px;padding:1px 4px}
+  .creneau.conflit i{width:8px;height:8px;border-radius:50%;flex:none}
+  /* Fermetures : congés (salle fermée) et fermeture possible (à confirmer). */
+  .ferm{font-size:10.5px;font-weight:600;border-radius:4px;padding:1px 5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ferm.conges{background:#5b6270;color:#fff}
+  .ferm.fermeture{background:#fff4e0;color:#9a5b00;border:1px dashed #d4890a}
+  .ferm.ferie{background:none;color:var(--doux);font-weight:500;padding:0}
+  .jour.j-conges{background:repeating-linear-gradient(135deg,#eceef2 0 6px,#f7f8fa 6px 12px)}
+  .jour.j-fermeture{background:repeating-linear-gradient(135deg,#fff7ea 0 6px,#fffdf8 6px 12px)}
+  .jour.j-ferie .num{color:var(--alerte)}
 
   /* Vue année */
   .annee{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
@@ -60,6 +71,9 @@
   .mj.plein i{color:#fff;text-shadow:0 0 2px #0008}
   .mj.auj{outline:2px solid var(--accent)}
   .mj.hors{visibility:hidden}
+  .mj.m-conges{background:repeating-linear-gradient(135deg,#9aa1ad 0 2px,#d9dce2 2px 4px)}
+  .mj.m-fermeture{background:repeating-linear-gradient(135deg,#f0c27a 0 2px,#fdf0d8 2px 4px)}
+  .mj.m-ferie i{color:var(--alerte);font-weight:700}
   .mini .compte{font-size:12px;color:var(--doux);margin-top:6px}
 
   /* Fenêtres */
@@ -73,6 +87,25 @@
   .choix input{position:absolute;opacity:0;pointer-events:none}
   .choix label{flex-direction:row;border:1px solid var(--trait);border-radius:20px;padding:6px 12px;color:var(--texte);cursor:pointer;font-size:14px}
   .choix input:checked+label{background:var(--accent);color:#fff;border-color:var(--accent)}
+  /* Petit calendrier cliquable pour choisir les jours */
+  .selcal{border:1px solid var(--trait);border-radius:10px;padding:8px}
+  .selcal .tete{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+  .selcal .tete b{text-transform:capitalize;font-size:14px}
+  .selcal .tete button{padding:2px 10px}
+  .selcal .g{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
+  .selcal .e{font-size:10px;color:var(--doux);text-align:center;text-transform:uppercase}
+  .selcal .d{position:relative;border:1px solid var(--trait);background:var(--carte);border-radius:7px;padding:5px 0 9px;font-size:13px;cursor:pointer;text-align:center}
+  .selcal .d:hover{border-color:var(--accent)}
+  .selcal .d.we{background:var(--weekend);color:var(--doux)}
+  .selcal .d.auj{font-weight:700}
+  .selcal .d.ferie{color:var(--alerte)}
+  .selcal .d.conges{background:repeating-linear-gradient(135deg,#e3e5ea 0 4px,#f5f6f8 4px 8px)}
+  .selcal .d.fermeture{background:repeating-linear-gradient(135deg,#fde9c8 0 4px,#fffaf0 4px 8px)}
+  .selcal .d.choisi{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700}
+  .selcal .d .pts{position:absolute;left:0;right:0;bottom:2px;display:flex;justify-content:center;gap:2px}
+  .selcal .d .pts i{width:5px;height:5px;border-radius:50%}
+  .selcal .d.choisi .pts i{outline:1px solid #fff}
+  .selcal .vide{visibility:hidden}
   .choix input:focus-visible+label{outline:2px solid var(--accent);outline-offset:2px}
   .dates{display:flex;flex-wrap:wrap;gap:6px}
   .puce{background:var(--libre);border-radius:14px;padding:3px 10px;font-size:13px;display:inline-flex;align-items:center}
@@ -130,6 +163,7 @@
     <button id="vMois" class="actif">Mois</button>
     <button id="vAnnee">Année</button>
     <button id="btnOrgs" class="admin-seul">Organismes</button>
+    <button id="btnFerm" class="admin-seul">Fermetures</button>
     <button id="btnAjout" class="principal admin-seul">+ Formation</button>
   </div>
 </header>
@@ -165,10 +199,8 @@
       <div class="choix" id="fCreneau"></div>
     </div>
     <div>
-      <div class="ligne">
-        <label>Ajouter un jour <input type="date" id="fDate"></label>
-        <button type="button" id="ajDate">Ajouter</button>
-      </div>
+      <label>Jours <span class="info">— cliquez sur les jours pour les ajouter ou les retirer</span></label>
+      <div class="selcal" id="fCal"></div>
       <div class="dates" id="fDates" style="margin-top:8px"></div>
       <div class="info" id="fNb" style="margin-top:4px"></div>
     </div>
@@ -186,13 +218,46 @@
   </form>
 </dialog>
 
+<!-- Fermeture ou congés -->
+<dialog id="dlgF">
+  <form id="frmF">
+    <h2 id="fermTitre">Fermeture de la salle</h2>
+    <div>
+      <label>Type</label>
+      <div class="choix">
+        <input type="radio" name="tf" id="tf-conges" value="conges"><label for="tf-conges">Congés (salle fermée)</label>
+        <input type="radio" name="tf" id="tf-fermeture" value="fermeture"><label for="tf-fermeture">Fermeture possible</label>
+      </div>
+    </div>
+    <div>
+      <label>Jours <span class="info">— cliquez sur les jours</span></label>
+      <div class="selcal" id="fermCal"></div>
+      <div class="dates" id="fermDates" style="margin-top:8px"></div>
+    </div>
+    <label>Note <span class="info">(facultatif)</span>
+      <input id="fermNote" maxlength="200" placeholder="Ex. vacances d'été, travaux, à confirmer…">
+    </label>
+    <div class="alerte" id="fermAlerte" hidden></div>
+    <div class="actions">
+      <button type="button" id="fermSuppr" style="color:var(--alerte)">Supprimer</button>
+      <span>
+        <button type="button" data-fermer>Annuler</button>
+        <button type="submit" class="principal">Enregistrer</button>
+      </span>
+    </div>
+  </form>
+</dialog>
+
 <!-- Détail d'un jour (lecture) -->
 <dialog id="dlgJour">
   <div class="corps">
     <h2 id="jourTitre"></h2>
     <div id="jourContenu" style="display:flex;flex-direction:column;gap:12px"></div>
     <div class="actions">
-      <button type="button" class="admin-seul" id="jourAjout">+ Formation ce jour</button>
+      <span style="display:flex;gap:8px;flex-wrap:wrap">
+        <button type="button" class="admin-seul" id="jourAjout">+ Formation ce jour</button>
+        <button type="button" class="admin-seul" id="jourFerm">Fermer ce jour</button>
+      </span>
       <button type="button" data-fermer class="principal">Fermer</button>
     </div>
   </div>
@@ -264,6 +329,7 @@ async function appel(action, corps){
 
 async function charger(){
   D = await appel('donnees');
+  D.fermetures ??= [];
   D.orgs ??= []; D.formations ??= [];
   for (const o of D.orgs) o.titres ??= [];
   document.body.classList.add('admin');
@@ -273,7 +339,7 @@ async function charger(){
 // Enregistre l'état complet ; en cas de modification concurrente, on recharge.
 async function enregistrer(msg){
   try {
-    const r = await appel('enregistrer', {version:D.version, donnees:{orgs:D.orgs, formations:D.formations}});
+    const r = await appel('enregistrer', {version:D.version, donnees:{orgs:D.orgs, formations:D.formations, fermetures:D.fermetures}});
     D.version = r.version; D.modifie = new Date().toISOString();
     rendre(); toast(msg || 'Enregistré');
     return true;
@@ -297,6 +363,31 @@ function index(){
   return ix;
 }
 
+// --- Fermetures et jours fériés ---
+const TYPES_F = {conges:'Congés', fermeture:'Fermeture possible'};
+// date -> fermeture (la première trouvée ; les congés l'emportent sur la fermeture possible)
+function indexF(){
+  const ix = {};
+  for (const f of D.fermetures) for (const j of f.jours)
+    if (!ix[j] || (f.type==='conges' && ix[j].type!=='conges')) ix[j] = f;
+  return ix;
+}
+// Jours fériés français, calculés (Pâques par l'algorithme de Meeus).
+const _feries = {};
+function feries(a){
+  if (_feries[a]) return _feries[a];
+  const b=Math.floor(a/100), c=a%100, d=Math.floor(b/4), e=b%4, g=Math.floor((8*b+13)/25), h=(19*(a%19)+b-d-g+15)%30;
+  const i=Math.floor(c/4), k=c%4, l=(32+2*e+2*i-h-k)%7, m=Math.floor(((a%19)+11*h+19*l)/433);
+  const mois=Math.floor((h+l-7*m+90)/25), jour=(h+l-7*m+33*mois+19)%32;
+  const paques=new Date(a,mois-1,jour), plus=n=>iso(new Date(a,mois-1,jour+n));
+  return _feries[a] = {
+    [`${a}-01-01`]:'Jour de l’an', [plus(1)]:'Lundi de Pâques', [`${a}-05-01`]:'Fête du travail',
+    [`${a}-05-08`]:'Victoire 1945', [plus(39)]:'Ascension', [plus(50)]:'Lundi de Pentecôte',
+    [`${a}-07-14`]:'Fête nationale', [`${a}-08-15`]:'Assomption', [`${a}-11-01`]:'Toussaint',
+    [`${a}-11-11`]:'Armistice', [`${a}-12-25`]:'Noël'};
+}
+const ferie = k => feries(+k.slice(0,4))[k];
+
 function grilleMois(a, m){
   const decal = (new Date(a,m,1).getDay()+6)%7, cases=[];
   const n = Math.ceil((decal + new Date(a,m+1,0).getDate())/7)*7;
@@ -308,6 +399,8 @@ function legende(){
   const utilises = new Set(D.formations.map(f=>f.org));
   $('legende').innerHTML = D.orgs.filter(o=>utilises.has(o.id) || admin)
     .map(o=>`<span><i class="pastille" style="background:${o.couleur}"></i>${esc(o.nom)}</span>`).join('')
+    + (D.fermetures.some(f=>f.type==='conges') ? '<span><span class="ferm conges">Congés</span></span>' : '')
+    + (D.fermetures.some(f=>f.type==='fermeture') ? '<span><span class="ferm fermeture">Fermeture possible</span></span>' : '')
     + (D.formations.some(f=>f.jours.length) ? '<span class="doux">Chaque jour : matin / après-midi / soirée</span>' : '');
   const v = $('msgVide');
   if (!D.orgs.length && admin){ v.hidden=false; v.innerHTML='Commencez par créer les organismes de formation (bouton « Organismes »), puis ajoutez les formations.'; }
@@ -317,7 +410,7 @@ function legende(){
 }
 
 function rendreMois(){
-  const a=curseur.getFullYear(), m=curseur.getMonth(), ix=index(), auj=iso(new Date());
+  const a=curseur.getFullYear(), m=curseur.getMonth(), ix=index(), ixF=indexF(), auj=iso(new Date());
   $('periode').textContent = MOIS[m]+' '+a;
   let h = JOURS.map(j=>`<div class="entete">${j}</div>`).join('');
   for (const d of grilleMois(a,m)){
@@ -325,15 +418,23 @@ function rendreMois(){
     if (d.getMonth()!==m) cl.push('hors');
     if (d.getDay()===0||d.getDay()===6) cl.push('weekend');
     if (k===auj) cl.push('auj');
+    const fe = ixF[k], fer = ferie(k);
+    if (fe) cl.push('j-'+fe.type);
+    if (fer) cl.push('j-ferie');
     h += `<div class="${cl.join(' ')}" data-jour="${k}"><span class="num">${d.getDate()}</span>`;
+    if (fe) h += `<span class="ferm ${fe.type}" title="${esc(TYPES_F[fe.type]+(fe.note?' — '+fe.note:''))}">${TYPES_F[fe.type]}${fe.note?' · '+esc(fe.note):''}</span>`;
+    else if (fer) h += `<span class="ferm ferie">${fer}</span>`;
     for (const [b,nom,court] of BANDES){
       const fs = ix[k]?.[b] || [];
       if (!fs.length){ h += `<div class="creneau vide" title="${nom} : libre">.</div>`; continue; }
+      if (fs.length>1){
+        // Superposition : une bande lisible qui le dit, le détail s'ouvre au clic sur le jour.
+        const titre = `⚠ ${nom} : ${fs.length} formations en même temps\n` + fs.map(x=>`• ${x.titre} (${org(x.org).nom})`).join('\n');
+        h += `<div class="creneau conflit" title="${esc(titre)}"><small>${court}</small>⚠ ${fs.length} en même temps ${fs.map(x=>`<i style="background:${org(x.org).couleur}"></i>`).join('')}</div>`;
+        continue;
+      }
       const f = fs[0], o = org(f.org);
-      // Plusieurs organismes sur le même créneau : la bande est partagée entre leurs couleurs.
-      const fond = fs.length>1 ? `linear-gradient(90deg,${fs.map((x,i)=>`${org(x.org).couleur} ${i*100/fs.length}% ${(i+1)*100/fs.length}%`).join(',')})` : o.couleur;
-      const titre = `${nom} — ${o.nom} — ${f.titre}` + (fs.length>1 ? `\n⚠ Chevauchement avec : ${fs.slice(1).map(x=>x.titre+' ('+org(x.org).nom+')').join(', ')}` : '');
-      h += `<div class="creneau${fs.length>1?' conflit':''}" data-f="${esc(f.id)}" style="background:${fond}" title="${esc(titre)}"><small>${court}</small>${esc(f.titre)}</div>`;
+      h += `<div class="creneau" data-f="${esc(f.id)}" style="background:${o.couleur}" title="${esc(`${nom} — ${o.nom} — ${f.titre}`)}"><small>${court}</small>${esc(f.titre)}</div>`;
     }
     h += '</div>';
   }
@@ -341,18 +442,22 @@ function rendreMois(){
 }
 
 function rendreAnnee(){
-  const a=curseur.getFullYear(), ix=index(), auj=iso(new Date());
+  const a=curseur.getFullYear(), ix=index(), ixF=indexF(), auj=iso(new Date());
   $('periode').textContent = a;
   let h='';
   for (let m=0;m<12;m++){
     let g = JOURS.map(j=>`<div class="e">${j[0]}</div>`).join(''), occ=0;
     for (const d of grilleMois(a,m)){
       if (d.getMonth()!==m){ g+='<div class="mj hors"></div>'; continue; }
-      const k=iso(d), fs = BANDES.map(([b])=>ix[k]?.[b]?.[0]);
+      const k=iso(d), tous = BANDES.map(([b])=>ix[k]?.[b]||[]), fs = tous.map(l=>l[0]);
       const plein = fs.some(Boolean); if (plein) occ++;
-      const t = BANDES.map(([,n],i)=>fs[i]?`${n} : ${org(fs[i].org).nom} — ${fs[i].titre}`:'').filter(Boolean).join('\n');
-      g += `<div class="mj${plein?' plein':''}${k===auj?' auj':''}" title="${esc(d.getDate()+' '+MOIS[m]+(t?'\n'+t:''))}">`
-         + fs.map(f=>`<b${f?` style="background:${org(f.org).couleur}"`:''}></b>`).join('')
+      const fe = ixF[k], fer = ferie(k);
+      const t = [fe?TYPES_F[fe.type]+(fe.note?' — '+fe.note:''):'', fer||'']
+        .concat(BANDES.map(([,n],i)=>tous[i].length?`${n} : `+tous[i].map(f=>`${org(f.org).nom} — ${f.titre}`).join(' + '):'')).filter(Boolean).join('\n');
+      // Superposition : bande rayée aux couleurs des organismes concernés.
+      const fond = l => l.length>1 ? `repeating-linear-gradient(90deg,${l.map((f,i)=>`${org(f.org).couleur} ${i*3}px ${(i+1)*3}px`).join(',')})` : org(l[0].org).couleur;
+      g += `<div class="mj${plein?' plein':''}${k===auj?' auj':''}${fe?' m-'+fe.type:''}${fer?' m-ferie':''}" title="${esc(d.getDate()+' '+MOIS[m]+(t?'\n'+t:''))}">`
+         + tous.map(l=>`<b${l.length?` style="background:${fond(l)}"`:''}></b>`).join('')
          + `<i>${d.getDate()}</i></div>`;
     }
     h += `<div class="mini" data-mois="${m}" role="button" tabindex="0" aria-label="Voir ${MOIS[m]} ${a}"><h3>${MOIS[m]}</h3><div class="grille">${g}</div><div class="compte">${occ ? occ+' jour'+(occ>1?'s':'')+' occupé'+(occ>1?'s':'') : 'Libre'}</div></div>`;
@@ -380,9 +485,10 @@ $('vue').addEventListener('click', e=>{
   const j = e.target.closest('.jour');
   if (cr && admin){ ouvrir(D.formations.find(f=>f.id===cr.dataset.f)); return; }
   if (!j) return;
-  // Sur téléphone, les titres ne tiennent pas : on montre toujours le détail du jour.
-  if (admin && !cr && !(index()[j.dataset.jour]) ) { ouvrir(null, j.dataset.jour); return; }
-  voirJour(j.dataset.jour);
+  const k = j.dataset.jour;
+  // Jour vide : on saisit directement ; sinon (superposition, fermeture…) on montre le détail.
+  if (admin && !cr && !index()[k] && !indexF()[k]) { ouvrir(null, k); return; }
+  voirJour(k);
 });
 $('vue').addEventListener('keydown', e=>{ if ((e.key==='Enter'||e.key===' ') && e.target.classList.contains('mini')){ e.preventDefault(); e.target.click(); } });
 document.querySelectorAll('[data-fermer]').forEach(b=>b.onclick=()=>b.closest('dialog').close());
@@ -400,18 +506,61 @@ function voirJour(k){
   const fs = D.formations.filter(f=>f.jours.includes(k))
     .sort((a,b)=>CRENEAUX.findIndex(c=>c.id===a.creneau)-CRENEAUX.findIndex(c=>c.id===b.creneau));
   $('jourTitre').textContent = longue(k).replace(/^./, c=>c.toUpperCase());
-  $('jourContenu').innerHTML = fs.length ? fs.map(f=>{
+  const fms = D.fermetures.filter(f=>f.jours.includes(k)), fer = ferie(k);
+  const haut = (fer?`<p class="info" style="margin:0;color:var(--alerte)">Jour férié : ${fer}</p>`:'')
+    + fms.map(f=>`<div class="detail-f" style="border-color:${f.type==='conges'?'#5b6270':'#d4890a'}">
+      <h3>${TYPES_F[f.type]}</h3>${f.note?`<p class="note">${esc(f.note)}</p>`:''}
+      <p>${f.jours.length} jour${f.jours.length>1?'s':''}</p>
+      ${admin?`<button type="button" data-modif-f="${esc(f.id)}" style="margin-top:6px">Modifier</button>`:''}</div>`).join('');
+  $('jourContenu').innerHTML = haut + (fs.length ? fs.map(f=>{
     const o=org(f.org), n=f.jours.length;
     return `<div class="detail-f" style="border-color:${o.couleur}" data-f="${esc(f.id)}">
       <h3>${esc(f.titre)}</h3>
       <p><b style="color:${o.couleur}">${esc(o.nom)}</b> · ${creneau(f.creneau).nom}${n>1?` · ${n} jours : ${f.jours.map(j=>dateDe(j).toLocaleDateString('fr-FR',{day:'numeric',month:'short'})).join(', ')}`:''}</p>
       ${f.note?`<p class="note">${esc(f.note)}</p>`:''}
       ${admin?`<button type="button" data-modif="${esc(f.id)}" style="margin-top:6px">Modifier</button>`:''}
-    </div>`;}).join('') : '<p class="info">La salle est libre ce jour-là.</p>';
+    </div>`;}).join('') : (fms.length ? '' : '<p class="info">La salle est libre ce jour-là.</p>'));
   $('dlgJour').showModal();
 }
-$('jourContenu').onclick=e=>{ const id=e.target.dataset.modif; if(id){ $('dlgJour').close(); ouvrir(D.formations.find(f=>f.id===id)); } };
+$('jourContenu').onclick=e=>{
+  const id=e.target.dataset.modif, idF=e.target.dataset.modifF;
+  if(id){ $('dlgJour').close(); ouvrir(D.formations.find(f=>f.id===id)); }
+  if(idF){ $('dlgJour').close(); ouvrirF(D.fermetures.find(f=>f.id===idF)); }
+};
+$('jourFerm').onclick=()=>{ $('dlgJour').close(); ouvrirF(null, jourOuvert); };
 $('jourAjout').onclick=()=>{ $('dlgJour').close(); ouvrir(null, jourOuvert); };
+
+// --- Petit calendrier cliquable : un clic ajoute ou retire un jour ---
+// opts : {el, jours: () => tableau, basculer: k => void, ignorer: id à ne pas compter}
+function selecteur(opts){
+  let a, m;
+  const ancre = j => { const d = j ? dateDe(j) : new Date(); a=d.getFullYear(); m=d.getMonth(); };
+  function rendre(){
+    const ix=index(), ixF=indexF(), choisis=new Set(opts.jours()), auj=iso(new Date());
+    let h = `<div class="tete"><button type="button" data-nav="-1" aria-label="Mois précédent">‹</button><b>${MOIS[m]} ${a}</b><button type="button" data-nav="1" aria-label="Mois suivant">›</button></div><div class="g">`
+      + JOURS.map(j=>`<div class="e">${j}</div>`).join('');
+    for (const d of grilleMois(a,m)){
+      if (d.getMonth()!==m){ h+='<div class="vide"></div>'; continue; }
+      const k=iso(d), cl=['d'];
+      if (d.getDay()===0||d.getDay()===6) cl.push('we');
+      if (k===auj) cl.push('auj');
+      if (ferie(k)) cl.push('ferie');
+      if (ixF[k] && ixF[k].id!==opts.ignorer) cl.push(ixF[k].type);
+      if (choisis.has(k)) cl.push('choisi');
+      // Une pastille par formation déjà là ce jour-là (hors celle qu'on modifie).
+      const deja=[...new Set(BANDES.flatMap(([b])=>ix[k]?.[b]||[]))].filter(f=>f.id!==opts.ignorer);
+      const t=[ferie(k), ixF[k]?TYPES_F[ixF[k].type]:'', ...deja.map(f=>`${f.titre} (${org(f.org).nom}, ${creneau(f.creneau).nom.toLowerCase()})`)].filter(Boolean).join('\n');
+      h += `<button type="button" class="${cl.join(' ')}" data-k="${k}"${t?` title="${esc(t)}"`:''}>${d.getDate()}<span class="pts">${deja.slice(0,4).map(f=>`<i style="background:${org(f.org).couleur}"></i>`).join('')}</span></button>`;
+    }
+    opts.el.innerHTML = h + '</div>';
+  }
+  opts.el.onclick = e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    if (b.dataset.nav){ m+=+b.dataset.nav; if(m<0){m=11;a--;} if(m>11){m=0;a++;} rendre(); return; }
+    if (b.dataset.k){ opts.basculer(b.dataset.k); }
+  };
+  return { ancre, rendre };
+}
 
 // --- Saisie d'une formation ---
 let edite=null, jours=[];
@@ -421,8 +570,10 @@ function majTitres(){
   const o = org($('fOrg').value);
   $('titres').innerHTML = [...o.titres].sort((a,b)=>a.localeCompare(b,'fr')).map(t=>`<option value="${esc(t)}">`).join('');
 }
+const selF = selecteur({el:$('fCal'), jours:()=>jours, basculer:k=>{ jours = jours.includes(k) ? jours.filter(x=>x!==k) : [...jours,k]; majJours(); }, get ignorer(){ return edite?.id; }});
 function majJours(){
   jours.sort();
+  selF.rendre();
   $('fDates').innerHTML = jours.map(j=>`<span class="puce">${lisible(j)}<button type="button" data-j="${j}" aria-label="Retirer ce jour">×</button></span>`).join('');
   $('fNb').textContent = jours.length ? `${jours.length} jour${jours.length>1?'s':''}` : 'Aucun jour choisi : ajoutez au moins un jour.';
   verifier();
@@ -437,8 +588,13 @@ function verifier(){
       msgs.add(`${lisible(j)} : déjà « ${esc(f.titre)} » (${esc(org(f.org).nom)}, ${creneau(f.creneau).nom.toLowerCase()})`);
     }
   }
+  const ixF = indexF();
+  for (const j of jours){
+    if (ixF[j]) msgs.add(`${lisible(j)} : ${TYPES_F[ixF[j].type].toLowerCase()}${ixF[j].note?' ('+esc(ixF[j].note)+')':''}`);
+    else if (ferie(j)) msgs.add(`${lisible(j)} : jour férié (${ferie(j)})`);
+  }
   a.hidden = !msgs.size;
-  a.innerHTML = msgs.size ? '<b>Attention, la salle est déjà occupée :</b><br>'+[...msgs].join('<br>')+'<br>Vous pouvez quand même enregistrer.' : '';
+  a.innerHTML = msgs.size ? '<b>Attention :</b><br>'+[...msgs].join('<br>')+'<br>Vous pouvez quand même enregistrer.' : '';
 }
 function ouvrir(f, jour){
   if (!D.orgs.length){ toast('Créez d’abord un organisme.', true); ouvrirOrgs(); return; }
@@ -450,16 +606,13 @@ function ouvrir(f, jour){
   document.querySelectorAll('input[name=cr]').forEach(r=>r.checked = r.value===(f?f.creneau:'journee'));
   $('fNote').value = f?f.note:'';
   jours = f?[...f.jours]:(jour?[jour]:[]);
-  $('fDate').value = jour || (f ? f.jours[f.jours.length-1] : '');
+  selF.ancre(jour || (f ? f.jours[0] : iso(curseur.getMonth()===new Date().getMonth()&&curseur.getFullYear()===new Date().getFullYear() ? new Date() : curseur)));
   $('suppr').style.visibility = f?'visible':'hidden';
   majTitres(); majJours(); $('dlg').showModal();
 }
 $('btnAjout').onclick=()=>ouvrir(null);
 $('fOrg').onchange=majTitres;
 $('fCreneau').onchange=verifier;
-function ajouterDate(){ const v=$('fDate').value; if(v && !jours.includes(v)){ jours.push(v); majJours(); } }
-$('ajDate').onclick=ajouterDate;
-$('fDate').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); ajouterDate(); } });
 $('fDates').onclick=e=>{ const j=e.target.dataset.j; if(j){ jours=jours.filter(x=>x!==j); majJours(); } };
 $('suppr').onclick=async()=>{
   if (!edite || !confirm(`Supprimer « ${edite.titre} » du planning ?`)) return;
@@ -470,8 +623,6 @@ $('suppr').onclick=async()=>{
 };
 $('frm').onsubmit=async e=>{
   e.preventDefault();
-  // Une date tapée mais pas encore « ajoutée » compte quand même.
-  if ($('fDate').value && !jours.length) jours.push($('fDate').value);
   if (!jours.length){ toast('Choisissez au moins un jour.', true); return; }
   const v = { org:$('fOrg').value, titre:$('fTitre').value.trim(), creneau:document.querySelector('input[name=cr]:checked').value,
               jours:[...jours].sort(), note:$('fNote').value.trim() };
@@ -483,6 +634,45 @@ $('frm').onsubmit=async e=>{
   ouvrir.dernierOrg = v.org;
   $('dlg').close();
   if (!await enregistrer(edite ? 'Formation modifiée' : 'Formation ajoutée')) D = JSON.parse(sauve);
+};
+
+// --- Fermetures / congés ---
+let editeF=null, joursF=[];
+const selFerm = selecteur({el:$('fermCal'), jours:()=>joursF, basculer:k=>{ joursF = joursF.includes(k) ? joursF.filter(x=>x!==k) : [...joursF,k]; majJoursF(); }, get ignorer(){ return editeF?.id; }});
+function majJoursF(){
+  joursF.sort(); selFerm.rendre();
+  $('fermDates').innerHTML = joursF.map(j=>`<span class="puce">${lisible(j)}<button type="button" data-j="${j}" aria-label="Retirer ce jour">×</button></span>`).join('')
+    || '<span class="info">Aucun jour choisi.</span>';
+  const deja = D.formations.filter(f=>f.jours.some(j=>joursF.includes(j)));
+  $('fermAlerte').hidden = !deja.length;
+  $('fermAlerte').innerHTML = deja.length ? '<b>Des formations sont prévues ces jours-là :</b><br>'+deja.map(f=>`${esc(f.titre)} (${esc(org(f.org).nom)})`).join('<br>') : '';
+}
+function ouvrirF(f, jour){
+  editeF=f;
+  $('fermTitre').textContent = f ? 'Modifier la fermeture' : 'Fermeture de la salle';
+  document.querySelectorAll('input[name=tf]').forEach(r=>r.checked = r.value===(f?f.type:'conges'));
+  $('fermNote').value = f?.note || '';
+  joursF = f ? [...f.jours] : (jour ? [jour] : []);
+  selFerm.ancre(jour || f?.jours[0] || iso(curseur));
+  $('fermSuppr').style.visibility = f?'visible':'hidden';
+  majJoursF(); $('dlgF').showModal();
+}
+$('btnFerm').onclick=()=>ouvrirF(null);
+$('fermDates').onclick=e=>{ const j=e.target.dataset.j; if(j){ joursF=joursF.filter(x=>x!==j); majJoursF(); } };
+$('fermSuppr').onclick=async()=>{
+  if (!editeF || !confirm('Supprimer cette fermeture ?')) return;
+  const avant = D.fermetures; D.fermetures = D.fermetures.filter(f=>f.id!==editeF.id);
+  $('dlgF').close();
+  if (!await enregistrer('Fermeture supprimée')) D.fermetures = avant;
+};
+$('frmF').onsubmit=async e=>{
+  e.preventDefault();
+  if (!joursF.length){ toast('Choisissez au moins un jour.', true); return; }
+  const v = {type:document.querySelector('input[name=tf]:checked').value, jours:[...joursF], note:$('fermNote').value.trim()};
+  const sauve = JSON.stringify(D);
+  if (editeF) Object.assign(editeF, v); else D.fermetures.push({id:nouvelId('c'), ...v});
+  $('dlgF').close();
+  if (!await enregistrer(editeF ? 'Fermeture modifiée' : 'Fermeture ajoutée')) D = JSON.parse(sauve);
 };
 
 // --- Organismes ---

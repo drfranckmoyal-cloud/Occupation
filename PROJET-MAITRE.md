@@ -75,6 +75,15 @@ puis commit et push dans la foulée.
   gardée en archive. Notice serveur : `deploiement/LISEZ-MOI.md`.
 - D19 (02/10) **L'annexe planning.drfranckmoyal.fr est retirée** (DNS OVH, sous-domaine et dossier
   Hostinger) : rien de Planéo ne reste sur drfranckmoyal.fr. Planéo vit uniquement sur le portail.
+- D20 (02/10) **Superpositions lisibles** : quand plusieurs formations partagent un créneau, la bande
+  affiche « ⚠ N en même temps » sur fond blanc bordé de rouge, avec une pastille par organisme ; le
+  détail s'ouvre au clic (vue année : bande rayée aux couleurs concernées).
+- D21 (02/10) **Fermetures** (bouton « Fermetures ») : deux types, **Congés** (salle fermée, hachuré gris)
+  et **Fermeture possible** (à confirmer, hachuré orange), jours au choix, note. Les **jours fériés**
+  français sont calculés et affichés d'office. Alerte si une formation tombe un jour fermé ou férié.
+- D22 (02/10) **Choix des jours par un petit calendrier cliquable** dans la saisie (un clic ajoute ou
+  retire un jour, flèches pour changer de mois, pastilles des formations déjà prévues, fermetures et
+  fériés visibles), au lieu du champ date + bouton « Ajouter ».
 - D14 (02/10) Un chevauchement apparaît en deux couleurs, entouré de rouge.
 
 ## Questions ouvertes
@@ -166,3 +175,6 @@ sous-domaine, « Extract » avec `.` et « Overwrite existing files », puis met
   la ligne A `planning` chez OVH, le sous-domaine dans hPanel et mis le dossier `public_html/planning`
   à la corbeille. Vérifié : `planning` n'existe plus chez OVH ; messagerie (MX, SPF), vérification
   Google, site et www intacts. drfranckmoyal.fr est revenu à son état du matin.
+- **02/10/2026** — Retours de Franck : superposition illisible (18 novembre), fermetures/congés, choix des
+  jours peu pratique. D20 à D22 faits, essayés sur le Mac avec une copie des vraies données, puis mis en
+  ligne (anciens fichiers gardés dans `/home/dfm/Planeo/anciennes/`). Données intactes.
