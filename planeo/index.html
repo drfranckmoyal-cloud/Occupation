@@ -42,7 +42,9 @@
   footer{max-width:1300px;margin:0 auto;padding:0 20px 24px;display:flex;justify-content:space-between;gap:12px;color:var(--doux);font-size:13px;flex-wrap:wrap}
 
   /* Vue mois */
-  .mois{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+  .mois{display:grid;grid-template-columns:34px repeat(7,minmax(0,1fr));gap:4px}
+  .sem{display:flex;align-items:flex-start;justify-content:center;padding-top:6px;font-size:12px;font-weight:700;color:var(--accent)}
+  .sem span{background:#e8eef5;border-radius:6px;padding:2px 4px}
   .entete{font-size:13px;font-weight:700;color:var(--doux);text-transform:uppercase;letter-spacing:.06em;text-align:center;padding:4px 0}
   .jour{background:var(--carte);border:1px solid var(--trait);border-radius:8px;min-height:118px;padding:4px;display:flex;flex-direction:column;gap:3px;cursor:pointer}
   .jour.hors{opacity:.35}
@@ -104,6 +106,9 @@
   .filtres .puceorg{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--trait);background:var(--carte);border-radius:20px;padding:5px 12px;font-size:14px;cursor:pointer}
   .filtres .puceorg.off{opacity:.4;text-decoration:line-through}
   .filtres label.avenir{flex-direction:row;align-items:center;gap:6px;margin-left:auto;font-size:14px;color:var(--texte);cursor:pointer}
+  .l-sem{display:flex;align-items:center;gap:10px;margin:16px 0 8px;font-size:14px;color:var(--doux)}
+  .l-sem b{color:var(--accent);font-size:15px}
+  .l-sem::after{content:"";flex:1;border-top:1px solid var(--trait)}
   .l-mois{font-size:22px;font-weight:750;text-transform:capitalize;margin:22px 0 8px;color:var(--accent)}
   .l-jour{display:grid;grid-template-columns:110px 1fr;gap:12px;background:var(--carte);border:1px solid var(--trait);border-radius:10px;padding:10px 12px;margin-bottom:8px}
   .l-jour.auj{border:2px solid var(--accent)}
@@ -194,6 +199,9 @@
     .periode-centre{min-width:0}
     #periode{font-size:28px}
     .num{font-size:14px}
+    .mois{grid-template-columns:22px repeat(7,minmax(0,1fr));gap:2px}
+    .sem{font-size:10px;padding-top:3px}
+    .sem span{padding:1px 2px}
   }
   @media print{
     header .nav:last-child,footer,.toast{display:none}
@@ -449,6 +457,14 @@ function feries(a){
 }
 const ferie = k => feries(+k.slice(0,4))[k];
 
+// Numéro de semaine officiel (ISO 8601 : semaines du lundi au dimanche, semaine 1 = celle du premier jeudi).
+function numSemaine(d){
+  const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const j = t.getUTCDay() || 7;
+  t.setUTCDate(t.getUTCDate() + 4 - j);
+  return Math.ceil(((t - new Date(Date.UTC(t.getUTCFullYear(),0,1))) / 864e5 + 1) / 7);
+}
+
 function grilleMois(a, m){
   const decal = (new Date(a,m,1).getDay()+6)%7, cases=[];
   const n = Math.ceil((decal + new Date(a,m+1,0).getDate())/7)*7;
@@ -473,9 +489,10 @@ function legende(){
 function rendreMois(){
   const a=curseur.getFullYear(), m=curseur.getMonth(), ix=index(), ixF=indexF(), auj=iso(new Date());
   $('periode').innerHTML = `${MOIS[m]}<span class="an">${a}</span>`;
-  let h = JOURS.map(j=>`<div class="entete">${j}</div>`).join('');
+  let h = `<div class="entete" title="Numéro de semaine">Sem.</div>` + JOURS.map(j=>`<div class="entete">${j}</div>`).join('');
   for (const d of grilleMois(a,m)){
     const k=iso(d), cl=['jour'];
+    if (d.getDay()===1) h += `<div class="sem" title="Semaine ${numSemaine(d)}"><span>S${numSemaine(d)}</span></div>`;
     if (d.getMonth()!==m) cl.push('hors');
     if (d.getDay()===0||d.getDay()===6) cl.push('weekend');
     if (k===auj) cl.push('auj');
@@ -557,10 +574,19 @@ function rendreListe(){
     + `<label class="avenir"><input type="checkbox" id="lAvenir"${listeAvenir?' checked':''}> Tout ce qui est à venir</label></div>`;
   const jours = Object.keys(parJour).sort();
   if (!jours.length) h += `<div class="l-vide">${listeAvenir ? 'Rien de prévu à partir d’aujourd’hui.' : 'Rien de prévu ce mois-ci.'}</div>`;
-  let moisCourant = '';
+  let moisCourant = '', semCourante = '';
+  const court = d => d.toLocaleDateString('fr-FR',{day:'numeric', month:'long'});
   for (const j of jours){
     const d = dateDe(j), items = parJour[j].sort((x,y)=>ordre[x.t]-ordre[y.t] || (x.t==='f' ? cr(x.f.creneau)-cr(y.f.creneau) : 0));
-    if (listeAvenir && j.slice(0,7)!==moisCourant){ moisCourant=j.slice(0,7); h += `<div class="l-mois">${MOIS[d.getMonth()]} ${d.getFullYear()}</div>`; }
+    if (listeAvenir && j.slice(0,7)!==moisCourant){ moisCourant=j.slice(0,7); semCourante=''; h += `<div class="l-mois">${MOIS[d.getMonth()]} ${d.getFullYear()}</div>`; }
+    // Séparateur de semaine : « Semaine 46 · du 9 au 15 novembre »
+    const lundi = new Date(d.getFullYear(), d.getMonth(), d.getDate() - ((d.getDay()+6)%7));
+    if (iso(lundi)!==semCourante){
+      semCourante = iso(lundi);
+      const dim = new Date(lundi.getFullYear(), lundi.getMonth(), lundi.getDate()+6);
+      const du = lundi.getMonth()===dim.getMonth() ? lundi.getDate() : court(lundi);
+      h += `<div class="l-sem"><b>Semaine ${numSemaine(d)}</b> du ${du} au ${court(dim)}</div>`;
+    }
     // Superpositions de ce jour : formations dont les créneaux se recouvrent.
     const fs = items.filter(x=>x.t==='f').map(x=>x.f);
     const enConflit = f => fs.some(g=>g!==f && creneau(g.creneau).couvre.some(b=>creneau(f.creneau).couvre.includes(b)));

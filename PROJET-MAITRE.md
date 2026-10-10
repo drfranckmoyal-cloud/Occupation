@@ -97,6 +97,9 @@ puis commit et push dans la foulée.
   « Tout ce qui est à venir » (à partir d'aujourd'hui, regroupé par mois). Filtre par organisme
   (clic sur une pastille pour masquer/afficher). Jours passés estompés. Clic sur une ligne = modifier.
   Filtres et choix mémorisés dans le navigateur.
+- D26 (10/10) **Numéros de semaine** (ISO 8601, ceux des agendas) : dans la liste, un séparateur par
+  semaine « Semaine 46 · du 9 au 15 novembre » ; dans la vue Mois, une colonne « Sem. » à gauche avec
+  S44, S45…
 - D14 (02/10) Un chevauchement apparaît en deux couleurs, entouré de rouge.
 
 ## Questions ouvertes
@@ -193,3 +196,4 @@ sous-domaine, « Extract » avec `.` et « Overwrite existing files », puis met
   ligne (anciens fichiers gardés dans `/home/dfm/Planeo/anciennes/`). Données intactes.
 - **10/10/2026** — Demande de Franck : vue par liste ou agenda. D25 faite, essayée sur le Mac avec une copie
   des vraies données (ordinateur et téléphone), mise en ligne (ancienne page gardée dans `anciennes/`).
+- **10/10/2026** — D26 (séparation par semaine et numéros de semaine), essayée sur le Mac, mise en ligne.
