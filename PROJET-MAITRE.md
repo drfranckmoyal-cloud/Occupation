@@ -91,6 +91,12 @@ puis commit et push dans la foulée.
   jours de la ou des formations concernées (le reste s'atténue) ; une bulle annonce pour chacune
   l'organisme, le titre, le créneau et les dates regroupées par mois, plus superposition, fermeture ou
   jour férié s'il y a lieu. Un clic ouvre toujours le mois.
+- D25 (10/10) **Vue Liste (agenda)**, troisième bouton à côté de Mois et Année : jour par jour, une
+  ligne par formation (créneau, organisme dans sa couleur, titre, « jour 2 sur 3 » et dates, note),
+  fermetures et fériés compris, superpositions encadrées de rouge. Navigation mois par mois, ou case
+  « Tout ce qui est à venir » (à partir d'aujourd'hui, regroupé par mois). Filtre par organisme
+  (clic sur une pastille pour masquer/afficher). Jours passés estompés. Clic sur une ligne = modifier.
+  Filtres et choix mémorisés dans le navigateur.
 - D14 (02/10) Un chevauchement apparaît en deux couleurs, entouré de rouge.
 
 ## Questions ouvertes
@@ -185,3 +191,5 @@ sous-domaine, « Extract » avec `.` et « Overwrite existing files », puis met
 - **02/10/2026** — Retours de Franck : superposition illisible (18 novembre), fermetures/congés, choix des
   jours peu pratique. D20 à D22 faits, essayés sur le Mac avec une copie des vraies données, puis mis en
   ligne (anciens fichiers gardés dans `/home/dfm/Planeo/anciennes/`). Données intactes.
+- **10/10/2026** — Demande de Franck : vue par liste ou agenda. D25 faite, essayée sur le Mac avec une copie
+  des vraies données (ordinateur et téléphone), mise en ligne (ancienne page gardée dans `anciennes/`).

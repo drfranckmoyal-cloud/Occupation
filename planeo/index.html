@@ -98,6 +98,33 @@
   .bulle .bf .dt{color:var(--doux)}
   .bulle .bx{color:var(--doux);margin-top:4px}
 
+  /* Vue liste (agenda) */
+  .liste{max-width:900px;margin:0 auto}
+  .filtres{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+  .filtres .puceorg{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--trait);background:var(--carte);border-radius:20px;padding:5px 12px;font-size:14px;cursor:pointer}
+  .filtres .puceorg.off{opacity:.4;text-decoration:line-through}
+  .filtres label.avenir{flex-direction:row;align-items:center;gap:6px;margin-left:auto;font-size:14px;color:var(--texte);cursor:pointer}
+  .l-mois{font-size:22px;font-weight:750;text-transform:capitalize;margin:22px 0 8px;color:var(--accent)}
+  .l-jour{display:grid;grid-template-columns:110px 1fr;gap:12px;background:var(--carte);border:1px solid var(--trait);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+  .l-jour.auj{border:2px solid var(--accent)}
+  .l-jour.passe{opacity:.55}
+  .l-date{display:flex;flex-direction:column;align-items:flex-start}
+  .l-date .jsem{font-size:13px;color:var(--doux);text-transform:capitalize}
+  .l-date .jnum{font-size:28px;font-weight:750;line-height:1}
+  .l-date .jmois{font-size:13px;color:var(--doux)}
+  .l-items{display:flex;flex-direction:column;gap:6px;min-width:0}
+  .l-item{display:grid;grid-template-columns:96px 1fr;gap:10px;align-items:start;border-left:5px solid;border-radius:6px;background:#fafaf8;padding:6px 10px;cursor:pointer}
+  .l-item:hover{background:#f0f2f6}
+  .l-item.conflit{outline:2px solid var(--alerte);outline-offset:-1px}
+  .l-cr{font-size:12px;font-weight:700;text-transform:uppercase;color:var(--doux);padding-top:2px}
+  .l-txt b{display:block;font-size:15px}
+  .l-txt .l-org{font-size:13px;font-weight:700}
+  .l-txt .l-sub{font-size:13px;color:var(--doux)}
+  .l-txt .l-note{font-size:13px;white-space:pre-wrap}
+  .l-ferm{font-size:13px;font-weight:600}
+  .l-vide{color:var(--doux);text-align:center;padding:30px;background:var(--carte);border:1px dashed var(--trait);border-radius:10px}
+  @media (max-width:700px){ .l-jour{grid-template-columns:64px 1fr;gap:8px} .l-item{grid-template-columns:1fr} .l-date .jnum{font-size:22px} }
+
   /* Fenêtres */
   dialog{border:none;border-radius:14px;padding:0;width:min(520px,94vw);box-shadow:0 20px 50px #0003;color:var(--texte);background:var(--carte)}
   dialog::backdrop{background:#0005}
@@ -182,6 +209,7 @@
   <div class="nav">
     <button id="vMois" class="actif">Mois</button>
     <button id="vAnnee">Année</button>
+    <button id="vListe">Liste</button>
     <button id="btnOrgs" class="admin-seul">Organismes</button>
     <button id="btnFerm" class="admin-seul">Fermetures</button>
     <button id="btnAjout" class="principal admin-seul">+ Formation</button>
@@ -338,7 +366,11 @@ const admin = true;
 let vue = 'mois', curseur = new Date(); curseur.setDate(1);
 
 // Petit souvenir de la vue choisie, propre à ce navigateur.
-try { if (localStorage.getItem('occupation-vue') === 'annee') vue = 'annee'; } catch(e){}
+try { const v = localStorage.getItem('occupation-vue'); if (v==='annee' || v==='liste') vue = v; } catch(e){}
+// Vue liste : organismes masqués et option « tout ce qui est à venir », mémorisés dans ce navigateur.
+let listeMasques = new Set(), listeAvenir = false;
+try { listeMasques = new Set(JSON.parse(localStorage.getItem('planeo-liste-masques')||'[]')); listeAvenir = localStorage.getItem('planeo-liste-avenir')==='1'; } catch(e){}
+const memoListe = ()=>{ try{ localStorage.setItem('planeo-liste-masques', JSON.stringify([...listeMasques])); localStorage.setItem('planeo-liste-avenir', listeAvenir?'1':'0'); }catch(e){} };
 
 function toast(msg, err){
   const t=$('toast'); t.textContent=msg; t.className='toast on'+(err?' err':'');
@@ -493,11 +525,65 @@ function rendreAnnee(){
   const v=$('vue'); v.className='annee'; v.innerHTML=h;
 }
 
-function rendre(){ finSurvol(); legende(); vue==='mois'?rendreMois():rendreAnnee(); }
+function rendre(){
+  finSurvol(); legende();
+  $('legende').style.display = vue==='liste' ? 'none' : '';     // en liste, les filtres par organisme tiennent lieu de légende
+  vue==='mois'?rendreMois():vue==='annee'?rendreAnnee():rendreListe();
+}
+
+// --- Vue liste (agenda) : jour par jour, une ligne par formation ---
+function rendreListe(){
+  const a=curseur.getFullYear(), m=curseur.getMonth(), auj=iso(new Date()), ixF=indexF();
+  $('periode').innerHTML = listeAvenir ? '<span style="text-transform:none">À venir</span>' : `${MOIS[m]}<span class="an">${a}</span>`;
+  let debut, fin;
+  if (listeAvenir){ debut = auj; fin = '9999-12-31'; }
+  else { debut = iso(new Date(a,m,1)); fin = iso(new Date(a,m+1,0)); }
+  const dans = j => j>=debut && j<=fin;
+  // Tous les jours à afficher : formations visibles, fermetures, fériés.
+  const parJour = {};
+  const ajoute = (j, x) => (parJour[j] ??= []).push(x);
+  for (const f of D.formations){
+    if (listeMasques.has(f.org)) continue;
+    f.jours.forEach((j,i)=>{ if (dans(j)) ajoute(j, {t:'f', f, rang:i+1, n:f.jours.length}); });
+  }
+  for (const [j,fe] of Object.entries(ixF)) if (dans(j)) ajoute(j, {t:'c', fe});
+  const ans = listeAvenir ? [...new Set(Object.keys(parJour).map(j=>+j.slice(0,4)))] : [a];
+  for (const an of ans) for (const [j,nom] of Object.entries(feries(an))) if (dans(j) && parJour[j]) ajoute(j, {t:'r', nom});
+  const ordre = {c:0, r:1, f:2};
+  const cr = id => CRENEAUX.findIndex(c=>c.id===id);
+  const utilises = new Set(D.formations.map(f=>f.org));
+  let h = `<div class="filtres">` + D.orgs.filter(o=>utilises.has(o.id)).map(o=>
+      `<button type="button" class="puceorg${listeMasques.has(o.id)?' off':''}" data-org="${esc(o.id)}" title="Afficher ou masquer"><i class="pastille" style="background:${o.couleur}"></i>${esc(o.nom)}</button>`).join('')
+    + `<label class="avenir"><input type="checkbox" id="lAvenir"${listeAvenir?' checked':''}> Tout ce qui est à venir</label></div>`;
+  const jours = Object.keys(parJour).sort();
+  if (!jours.length) h += `<div class="l-vide">${listeAvenir ? 'Rien de prévu à partir d’aujourd’hui.' : 'Rien de prévu ce mois-ci.'}</div>`;
+  let moisCourant = '';
+  for (const j of jours){
+    const d = dateDe(j), items = parJour[j].sort((x,y)=>ordre[x.t]-ordre[y.t] || (x.t==='f' ? cr(x.f.creneau)-cr(y.f.creneau) : 0));
+    if (listeAvenir && j.slice(0,7)!==moisCourant){ moisCourant=j.slice(0,7); h += `<div class="l-mois">${MOIS[d.getMonth()]} ${d.getFullYear()}</div>`; }
+    // Superpositions de ce jour : formations dont les créneaux se recouvrent.
+    const fs = items.filter(x=>x.t==='f').map(x=>x.f);
+    const enConflit = f => fs.some(g=>g!==f && creneau(g.creneau).couvre.some(b=>creneau(f.creneau).couvre.includes(b)));
+    h += `<div class="l-jour${j===auj?' auj':''}${j<auj?' passe':''}" data-jour="${j}">
+      <div class="l-date"><span class="jsem">${d.toLocaleDateString('fr-FR',{weekday:'long'})}</span><span class="jnum">${d.getDate()}</span><span class="jmois">${d.toLocaleDateString('fr-FR',{month:'short', year: listeAvenir?undefined:undefined})}</span></div>
+      <div class="l-items">` + items.map(x=>{
+        if (x.t==='c') return `<div class="l-ferm"><span class="ferm ${x.fe.type}">${TYPES_F[x.fe.type]}</span> ${x.fe.note?esc(x.fe.note):''}</div>`;
+        if (x.t==='r') return `<div class="l-ferm" style="color:var(--alerte)">Jour férié : ${x.nom}</div>`;
+        const o = org(x.f.org);
+        return `<div class="l-item${enConflit(x.f)?' conflit':''}" data-f="${esc(x.f.id)}" style="border-color:${o.couleur}">
+          <span class="l-cr">${creneau(x.f.creneau).nom}</span>
+          <span class="l-txt"><span class="l-org" style="color:${o.couleur}">${esc(o.nom)}</span><b>${esc(x.f.titre)}</b>
+          <span class="l-sub">${x.n>1?`Jour ${x.rang} sur ${x.n} · ${datesCourtes(x.f.jours)}`:'1 jour'}${enConflit(x.f)?' · <span style="color:var(--alerte)">⚠ superposition</span>':''}</span>
+          ${x.f.note?`<span class="l-note">${esc(x.f.note)}</span>`:''}</span></div>`;
+      }).join('') + `</div></div>`;
+  }
+  const v=$('vue'); v.className='liste'; v.innerHTML=h;
+}
 
 // --- Navigation ---
-$('prec').onclick=()=>{ vue==='mois'?curseur.setMonth(curseur.getMonth()-1):curseur.setFullYear(curseur.getFullYear()-1); rendre(); };
-$('suiv').onclick=()=>{ vue==='mois'?curseur.setMonth(curseur.getMonth()+1):curseur.setFullYear(curseur.getFullYear()+1); rendre(); };
+// En liste « à venir », les flèches repassent à la liste mois par mois.
+$('prec').onclick=()=>{ if (vue==='liste' && listeAvenir){ listeAvenir=false; memoListe(); } else vue==='annee'?curseur.setFullYear(curseur.getFullYear()-1):curseur.setMonth(curseur.getMonth()-1); rendre(); };
+$('suiv').onclick=()=>{ if (vue==='liste' && listeAvenir){ listeAvenir=false; memoListe(); } else vue==='annee'?curseur.setFullYear(curseur.getFullYear()+1):curseur.setMonth(curseur.getMonth()+1); rendre(); };
 $('aujInfo').onclick=()=>{ curseur=new Date(); curseur.setDate(1); rendre(); };
 function majAuj(){
   const t = new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
@@ -505,12 +591,26 @@ function majAuj(){
 }
 majAuj(); setInterval(majAuj, 60*60*1000);
 function choisirVue(v){
-  vue=v; $('vMois').classList.toggle('actif',v==='mois'); $('vAnnee').classList.toggle('actif',v==='annee');
+  vue=v; $('vMois').classList.toggle('actif',v==='mois'); $('vAnnee').classList.toggle('actif',v==='annee'); $('vListe').classList.toggle('actif',v==='liste');
   try{ localStorage.setItem('occupation-vue', v); }catch(e){}
   rendre();
 }
 $('vMois').onclick=()=>choisirVue('mois');
 $('vAnnee').onclick=()=>choisirVue('annee');
+$('vListe').onclick=()=>choisirVue('liste');
+// Clics propres à la liste : filtre par organisme, « à venir », ouverture d'une formation ou d'un jour.
+$('vue').addEventListener('click', e=>{
+  if (vue!=='liste') return;
+  e.stopImmediatePropagation();          // la liste gère seule ses clics
+  if (e.target.closest('label.avenir')) return;
+  const po = e.target.closest('.puceorg');
+  if (po){ const id=po.dataset.org; listeMasques.has(id)?listeMasques.delete(id):listeMasques.add(id); memoListe(); rendre(); return; }
+  const it = e.target.closest('.l-item[data-f]');
+  if (it){ admin ? ouvrir(D.formations.find(f=>f.id===it.dataset.f)) : voirJour(it.closest('.l-jour').dataset.jour); return; }
+  const lj = e.target.closest('.l-jour');
+  if (lj) voirJour(lj.dataset.jour);
+}, true);
+$('vue').addEventListener('change', e=>{ if (e.target.id==='lAvenir'){ listeAvenir=e.target.checked; memoListe(); rendre(); } });
 $('vue').addEventListener('click', e=>{
   const mini = e.target.closest('.mini');
   if (mini){ curseur = new Date(curseur.getFullYear(), +mini.dataset.mois, 1); choisirVue('mois'); return; }
@@ -812,7 +912,7 @@ $('nOrg').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault
 
 
 // --- Démarrage ---
-$('vMois').classList.toggle('actif',vue==='mois'); $('vAnnee').classList.toggle('actif',vue==='annee');
+$('vMois').classList.toggle('actif',vue==='mois'); $('vAnnee').classList.toggle('actif',vue==='annee'); $('vListe').classList.toggle('actif',vue==='liste');
 charger()
   .catch(e=>{ $('vue').innerHTML=`<div class="vide-msg">Le planning n'a pas pu être chargé : ${esc(e.message)}</div>`; });
 // Rafraîchit le planning quand on revient sur l'onglet (pour voir les dernières modifications).
