@@ -234,6 +234,14 @@ formation pleine en préfixant le choix par « /////COMPLET ////// » : le tri d
 - G14 **Tri par la date** lue dans le choix du formulaire, en ignorant « /////COMPLET////// » ; sans correspondance
   unique, le choix va dans « À trier » et le rangement est mémorisé.
 
+- G15 (remplace G9 pour le lien) **Bouton bien visible « Exploiter un formulaire »** : Franck y colle le lien du
+  **classeur Google Sheets des réponses**, pas celui du formulaire. **Bouton « Rafraîchir l'extraction »** à tout
+  moment, en plus du relevé quotidien.
+- G16 Contacts créés sous la forme **« Prénom NOM CEMEDIS »**.
+- G17 Texte du lien d'invitation validé : « Bonjour, vous êtes inscrit(e) à la formation [nom] du [date]. Voici le
+  lien pour rejoindre le groupe WhatsApp d'information : [lien]. Dr Franck Moyal ».
+- G18 **Aucun message d'accueil** dans le groupe à sa création.
+
 Étape en cours : maquette du tableau des demandes, `maquette/groupes.html` (fictive), à valider avant la suite.
 À savoir pour la construction : le lien d'un formulaire permet d'y répondre, pas de lire les réponses ; Franck
 devra donner une fois l'autorisation Google sur le compte propriétaire des formulaires.
