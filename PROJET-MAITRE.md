@@ -197,3 +197,16 @@ sous-domaine, « Extract » avec `.` et « Overwrite existing files », puis met
 - **10/10/2026** — Demande de Franck : vue par liste ou agenda. D25 faite, essayée sur le Mac avec une copie
   des vraies données (ordinateur et téléphone), mise en ligne (ancienne page gardée dans `anciennes/`).
 - **10/10/2026** — D26 (séparation par semaine et numéros de semaine), essayée sur le Mac, mise en ligne.
+
+## Chantier « Constitution des groupes » (demande de Franck, 01/11/2026) — EN CADRAGE, rien de construit
+
+Demande : un questionnaire Forms envoyé aux prospects → Planéo relève les réponses chaque jour et tient un
+tableau des demandes → Franck coche les praticiens retenus → « Confirmer le groupe » (réouvrable) →
+bouton « Constituer le groupe WhatsApp » → si la liste change ensuite, proposer retrait/ajout → créer dans
+le répertoire les inscrits absents. Nom du groupe : « Cemedis Formations : <nom> <date> ».
+
+Questions à trancher par Franck : C1 quel Forms (Google ou Microsoft) ; C2 un formulaire par formation ou un
+seul ; C3 comment agir sur WhatsApp (recommandation : assisté depuis le Chrome du Mac, validation à chaque
+fois) ; C4 ajout direct ou lien d'invitation ; C5 groupe de discussion ou d'annonces ; C6 articulation avec
+DFM ; C7 mention de consentement dans le formulaire (numéro visible des autres membres).
+Prochaine étape : réponses de Franck à C1–C7, puis maquette du tableau des demandes.
