@@ -130,6 +130,76 @@
   .l-vide{color:var(--doux);text-align:center;padding:30px;background:var(--carte);border:1px dashed var(--trait);border-radius:10px}
   @media (max-width:700px){ .l-jour{grid-template-columns:64px 1fr;gap:8px} .l-item{grid-template-columns:1fr} .l-date .jnum{font-size:22px} }
 
+  /* Groupes : demandes d'inscription aux formations CEMEDIS */
+  #vueG{padding-bottom:70px}
+  .g-haut{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-bottom:14px}
+  .g-infos{flex:1;min-width:260px;font-size:14px;color:var(--doux)}
+  .g-infos b{color:var(--texte)}
+  .g-infos a{color:var(--accent);font-weight:600}
+  .g-infos .g-err{display:block;color:var(--alerte);font-weight:600}
+  .g-act{display:flex;flex-wrap:wrap;gap:8px}
+  .g-act button{padding:9px 14px;font-weight:600}
+  .g-corps{display:grid;grid-template-columns:250px minmax(0,1fr);gap:16px;align-items:start}
+  .g-titre{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--doux);margin:0 0 8px;font-weight:700}
+  .g-liste{display:flex;flex-direction:column;gap:8px}
+  .g-carte{display:block;width:100%;text-align:left;background:var(--carte);border:1px solid var(--trait);border-radius:10px;padding:10px 12px}
+  .g-carte.sel{border:2px solid var(--accent);padding:9px 11px}
+  .g-carte b{display:block;font-size:14px}
+  .g-carte .dt{display:block;color:var(--doux);font-size:13px;margin:1px 0 6px}
+  .g-carte .cpt{display:flex;justify-content:space-between;gap:8px;font-size:13px;align-items:center}
+  .g-carte.trier{background:#fff7ea;border-color:#e7b96a}
+  .g-b{display:inline-block;font-size:12px;font-weight:600;border-radius:12px;padding:1px 8px;white-space:nowrap}
+  .g-ouvert{background:var(--libre);color:var(--doux)}
+  .g-confirme{background:#e3f4ec;color:#0f7b55}
+  .g-nouveau{background:#fff1d9;color:#9a5b00}
+  .g-panneau{background:var(--carte);border:1px solid var(--trait);border-radius:12px;padding:16px;min-width:0}
+  .g-ptete{display:flex;flex-wrap:wrap;gap:8px 14px;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+  .g-ptete h3{font-size:22px;margin:0;letter-spacing:-.3px}
+  .g-ptete .dt{color:var(--doux)}
+  .g-places{display:inline-flex;flex-direction:row;align-items:center;gap:5px;font-size:14px}
+  .g-places input{width:62px;padding:2px 4px}
+  .g-tab{width:100%;border-collapse:collapse;table-layout:fixed;font-size:14px}
+  .g-tab th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--doux);text-align:left;padding:4px 6px;border-bottom:1px solid var(--trait);white-space:nowrap;overflow:hidden}
+  .g-tab td{padding:3px 6px;border-bottom:1px solid #f0eee9;vertical-align:middle;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;height:30px}
+  .g-tab tr.retenu td{background:#f1f6fb}
+  .g-tab tr.retenu td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
+  .g-tab .c{width:36px;text-align:center}
+  .g-tab .c-tel{width:124px}
+  .g-tab .c-dem{width:132px}
+  .g-tab input[type=checkbox]{width:16px;height:16px;margin:0;vertical-align:middle;accent-color:var(--accent);cursor:pointer}
+  .g-tab input[type=checkbox]:disabled{cursor:not-allowed}
+  .g-nom{font-weight:600}
+  .g-plus{font-weight:600;color:var(--accent);font-size:12px;margin-left:5px;cursor:help}
+  .g-mail{color:var(--doux);font-size:13px}
+  .g-tel{font-variant-numeric:tabular-nums}
+  .g-douteux{color:#9a5b00;font-weight:600}
+  .g-vide{color:var(--doux);text-align:center;padding:34px 16px;background:var(--carte);border:1px dashed var(--trait);border-radius:12px}
+  .g-barre{position:fixed;left:0;right:0;bottom:0;z-index:4;background:var(--carte);border-top:1px solid var(--trait);padding:12px 20px;box-shadow:0 -6px 20px #0000000d}
+  .g-barre>div{max-width:1300px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between}
+  .g-barre b{font-size:16px}
+  .g-barre .g-nomg{color:var(--doux);font-size:13px;display:block}
+  .g-barre .g-bt{display:flex;flex-wrap:wrap;gap:8px}
+  .g-depasse{color:#9a5b00;font-size:13px;font-weight:600}
+  button:disabled{opacity:.5;cursor:not-allowed}
+  .g-fligne{display:flex;gap:10px;align-items:center;justify-content:space-between;border:1px solid var(--trait);border-radius:8px;padding:7px 10px;margin-bottom:6px;font-size:14px}
+  .g-fligne .inf{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .g-fligne small{display:block;color:var(--doux);font-size:12px;overflow:hidden;text-overflow:ellipsis}
+  .g-fligne button{padding:2px 8px;font-size:13px;flex:none}
+  .g-robot{background:#f1f6fb;border-radius:8px;padding:8px 10px;font-size:13px}
+  .g-robot code{font-size:12px;overflow-wrap:anywhere;user-select:all}
+  @media (max-width:800px){
+    .g-corps{grid-template-columns:minmax(0,1fr)}
+    .g-barre{padding:10px 12px}
+    #vueG{padding-bottom:120px}
+    .g-tab thead{display:none}
+    .g-tab,.g-tab tbody,.g-tab tr,.g-tab td{display:block;width:100%}
+    .g-tab{table-layout:auto}
+    .g-tab tr{position:relative;padding:6px 8px 6px 36px;border-bottom:1px solid #f0eee9}
+    .g-tab td{padding:0;height:auto;border:none;background:none!important;box-shadow:none!important;white-space:normal}
+    .g-tab td.c{position:absolute;left:8px;top:8px;width:auto}
+    .g-tab tr.retenu{background:#f1f6fb}
+  }
+
   /* Fenêtres */
   dialog{border:none;border-radius:14px;padding:0;width:min(520px,94vw);box-shadow:0 20px 50px #0003;color:var(--texte);background:var(--carte)}
   dialog::backdrop{background:#0005}
@@ -218,6 +288,7 @@
     <button id="vMois" class="actif">Mois</button>
     <button id="vAnnee">Année</button>
     <button id="vListe">Liste</button>
+    <button id="vGroupes">Groupes</button>
     <button id="btnOrgs" class="admin-seul">Organismes</button>
     <button id="btnFerm" class="admin-seul">Fermetures</button>
     <button id="btnAjout" class="principal admin-seul">+ Formation</button>
@@ -236,6 +307,7 @@
   <div id="msgVide" class="vide-msg" hidden></div>
   <div class="legende" id="legende"></div>
   <div id="vue"></div>
+  <div id="vueG" hidden></div>
 </main>
 
 <footer>
@@ -268,6 +340,9 @@
       <div class="dates" id="fDates" style="margin-top:8px"></div>
       <div class="info" id="fNb" style="margin-top:4px"></div>
     </div>
+    <label id="fPlacesBloc" hidden>Nombre de places <span class="info">(indicatif : vous pourrez en cocher plus)</span>
+      <input type="number" id="fPlaces" min="1" max="999" style="max-width:110px">
+    </label>
     <label>Note libre <span class="info">(visible par tous)</span>
       <textarea id="fNote" rows="2" maxlength="1000" placeholder="Formateur, matériel, informations pratiques…"></textarea>
     </label>
@@ -343,6 +418,25 @@
 
 
 
+<div class="g-barre" id="gBarre" hidden><div id="gBarreInt"></div></div>
+
+<!-- Exploiter un formulaire : le lien du classeur des réponses -->
+<dialog id="dlgG">
+  <div class="corps">
+    <h2>Exploiter un formulaire</h2>
+    <p class="info" style="margin:0">Collez le lien du classeur Google Sheets qui reçoit les réponses du formulaire. Planéo le relit chaque matin, et à tout moment avec « Rafraîchir l'extraction ».</p>
+    <div id="gListeForms"></div>
+    <div class="g-robot" id="gRobot"></div>
+    <label>Nom <input id="gNom" maxlength="120" placeholder="Ex. Formations du 1er semestre 2027"></label>
+    <label>Lien du classeur des réponses (Google Sheets) <input id="gLien" type="url" placeholder="https://docs.google.com/spreadsheets/d/…"></label>
+    <div class="alerte" id="gErr" hidden></div>
+    <div class="actions">
+      <button type="button" class="principal" id="gAjout">Exploiter ce formulaire</button>
+      <button type="button" data-fermer>Fermer</button>
+    </div>
+  </div>
+</dialog>
+
 <div class="toast" id="toast" role="status"></div>
 <div class="bulle" id="bulle" hidden></div>
 
@@ -374,7 +468,7 @@ const admin = true;
 let vue = 'mois', curseur = new Date(); curseur.setDate(1);
 
 // Petit souvenir de la vue choisie, propre à ce navigateur.
-try { const v = localStorage.getItem('occupation-vue'); if (v==='annee' || v==='liste') vue = v; } catch(e){}
+try { const v = localStorage.getItem('occupation-vue'); if (v==='annee' || v==='liste' || v==='groupes') vue = v; } catch(e){}
 // Vue liste : organismes masqués et option « tout ce qui est à venir », mémorisés dans ce navigateur.
 let listeMasques = new Set(), listeAvenir = false;
 try { listeMasques = new Set(JSON.parse(localStorage.getItem('planeo-liste-masques')||'[]')); listeAvenir = localStorage.getItem('planeo-liste-avenir')==='1'; } catch(e){}
@@ -544,6 +638,16 @@ function rendreAnnee(){
 
 function rendre(){
   finSurvol(); legende();
+  const enGroupes = vue==='groupes';
+  document.querySelector('.periode-barre').style.display = enGroupes ? 'none' : '';
+  $('vue').style.display = enGroupes ? 'none' : '';
+  $('vueG').hidden = !enGroupes;
+  $('gBarre').hidden = true;
+  if (enGroupes){
+    $('legende').style.display='none'; $('msgVide').hidden=true;
+    G ? rendreGroupes() : chargerG();
+    return;
+  }
   $('legende').style.display = vue==='liste' ? 'none' : '';     // en liste, les filtres par organisme tiennent lieu de légende
   vue==='mois'?rendreMois():vue==='annee'?rendreAnnee():rendreListe();
 }
@@ -617,13 +721,15 @@ function majAuj(){
 }
 majAuj(); setInterval(majAuj, 60*60*1000);
 function choisirVue(v){
-  vue=v; $('vMois').classList.toggle('actif',v==='mois'); $('vAnnee').classList.toggle('actif',v==='annee'); $('vListe').classList.toggle('actif',v==='liste');
+  vue=v; $('vMois').classList.toggle('actif',v==='mois'); $('vAnnee').classList.toggle('actif',v==='annee'); $('vListe').classList.toggle('actif',v==='liste'); $('vGroupes').classList.toggle('actif',v==='groupes');
+  if (v==='groupes') G = null;      // on relit à chaque entrée dans l'onglet
   try{ localStorage.setItem('occupation-vue', v); }catch(e){}
   rendre();
 }
 $('vMois').onclick=()=>choisirVue('mois');
 $('vAnnee').onclick=()=>choisirVue('annee');
 $('vListe').onclick=()=>choisirVue('liste');
+$('vGroupes').onclick=()=>choisirVue('groupes');
 // Clics propres à la liste : filtre par organisme, « à venir », ouverture d'une formation ou d'un jour.
 $('vue').addEventListener('click', e=>{
   if (vue!=='liste') return;
@@ -653,7 +759,7 @@ $('vue').addEventListener('keydown', e=>{ if ((e.key==='Enter'||e.key===' ') && 
 document.querySelectorAll('[data-fermer]').forEach(b=>b.onclick=()=>b.closest('dialog').close());
 // Touches ← → pour changer de période.
 document.addEventListener('keydown', e=>{
-  if (document.querySelector('dialog[open]') || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+  if (vue==='groupes' || document.querySelector('dialog[open]') || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
   if (e.key==='ArrowLeft') $('prec').click();
   if (e.key==='ArrowRight') $('suiv').click();
 });
@@ -818,13 +924,18 @@ function ouvrir(f, jour){
   $('fTitre').value = f?f.titre:'';
   document.querySelectorAll('input[name=cr]').forEach(r=>r.checked = r.value===(f?f.creneau:'journee'));
   $('fNote').value = f?f.note:'';
+  $('fPlaces').value = f?.places || '';
+  majPlaces();
   jours = f?[...f.jours]:(jour?[jour]:[]);
   selF.ancre(jour || (f ? f.jours[0] : iso(curseur.getMonth()===new Date().getMonth()&&curseur.getFullYear()===new Date().getFullYear() ? new Date() : curseur)));
   $('suppr').style.visibility = f?'visible':'hidden';
   majTitres(); majJours(); $('dlg').showModal();
 }
 $('btnAjout').onclick=()=>ouvrir(null);
-$('fOrg').onchange=majTitres;
+// Le nombre de places ne concerne que les formations CEMEDIS.
+const estCemedis = id => /^cemedis/i.test(org(id).nom);
+function majPlaces(){ $('fPlacesBloc').hidden = !estCemedis($('fOrg').value); }
+$('fOrg').onchange=()=>{ majTitres(); majPlaces(); };
 $('fCreneau').onchange=verifier;
 $('fDates').onclick=e=>{ const j=e.target.dataset.j; if(j){ jours=jours.filter(x=>x!==j); majJours(); } };
 $('suppr').onclick=async()=>{
@@ -841,6 +952,9 @@ $('frm').onsubmit=async e=>{
               jours:[...jours].sort(), note:$('fNote').value.trim() };
   if (!v.titre){ toast('Indiquez le titre de la formation.', true); return; }
   const sauve = JSON.stringify(D);
+  const pl = parseInt($('fPlaces').value, 10);
+  if (estCemedis(v.org) && pl > 0) v.places = pl;
+  else if (edite) delete edite.places;
   if (edite) Object.assign(edite, v); else D.formations.push({id:nouvelId('f'), ...v});
   const o = D.orgs.find(o=>o.id===v.org);
   if (o && !o.titres.includes(v.titre)) o.titres.push(v.titre);   // mémoire des titres par organisme
@@ -937,12 +1051,144 @@ $('ajOrg').onclick=async()=>{
 $('nOrg').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); $('ajOrg').click(); } });
 
 
+// --- Groupes : demandes d'inscription aux formations CEMEDIS ---
+let G = null, gSel = null;
+async function chargerG(){
+  try { G = await appel('groupes'); rendreGroupes(); }
+  catch(e){
+    if (e.code===401) return location.reload();
+    $('vueG').innerHTML = `<div class="g-vide">Impossible de charger les demandes : ${esc(e.message)}</div>`;
+  }
+}
+// Toute action renvoie l'état complet : la page ne peut pas diverger du serveur.
+async function actionG(chemin, corps, msg){
+  try { G = await appel('groupes/'+chemin, corps||{}); rendreGroupes(); if (msg) toast(msg); return true; }
+  catch(e){ if (e.code===401) location.reload(); else { toast(e.message, true); chargerG(); } return false; }
+}
+const dateCourte = iso => iso ? dateDe(iso).toLocaleDateString('fr-FR',{day:'numeric',month:'short'}) : '';
+function datesFormation(f){
+  const js=[...f.jours].sort(), ds=js.map(dateDe), a=ds[ds.length-1];
+  const fin = a.toLocaleDateString('fr-FR',{month:'long',year:'numeric'});
+  if (js.length===1 || !js.every(j=>j.slice(0,7)===js[0].slice(0,7))) return js.length===1 ? `${a.getDate()} ${fin}` : datesCourtes(js);
+  const suite = ds.every((d,i)=>!i || d.getDate()===ds[i-1].getDate()+1);
+  return (suite ? `${ds[0].getDate()}-${a.getDate()}` : ds.map(d=>d.getDate()).join(', ')) + ' ' + fin;
+}
+const fmtHeure = t => { if(!t) return ''; const d=new Date(t); return d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'})+' à '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}); };
+const demandesDe = fid => G.demandes.filter(x=>x.voeux.includes(fid));
+const placesDe = fid => D.formations.find(f=>f.id===fid)?.places;
+
+function rendreGroupes(){
+  const infos = G.formulaires.length
+    ? G.formulaires.map(f=>`Formulaire : <a href="${esc(f.lien)}" target="_blank" rel="noopener" title="Ouvrir le classeur des réponses">${esc(f.nom)} ↗</a>`
+        + (f.releve ? ` · relevé le ${fmtHeure(f.releve)} · <b>${f.recues||0}</b> réponse${f.recues>1?'s':''}, dont <b>${f.nouvelles||0}</b> nouvelle${f.nouvelles>1?'s':''}` : ' · pas encore lu')
+        + (f.erreur ? `<span class="g-err">${esc(f.erreur)}</span>` : '')).join('<br>')
+    : 'Aucun formulaire exploité pour le moment.';
+  if (gSel!=='trier' && !G.formations.some(f=>f.id===gSel)) gSel = (G.formations.find(f=>demandesDe(f.id).length) || G.formations[0])?.id || (G.a_trier.length?'trier':null);
+  if (gSel==='trier' && !G.a_trier.length) gSel = G.formations[0]?.id || null;
+  let h = `<div class="g-haut"><div class="g-infos">${infos}</div><div class="g-act">
+      <button id="gRafr" ${G.formulaires.length?'':'disabled'} title="Relire tout de suite les réponses">↻ Rafraîchir l'extraction</button>
+      <button id="gExpl" class="principal">Exploiter un formulaire</button></div></div>`;
+  if (!G.formations.length && !G.a_trier.length){
+    h += `<div class="g-vide">Aucune formation CEMEDIS à venir. Créez-en une dans le calendrier, avec l'organisme CEMEDIS : elle apparaîtra ici.</div>`;
+  } else {
+    h += `<div class="g-corps"><section><div class="g-titre">Formations CEMEDIS</div><div class="g-liste">`
+      + (G.a_trier.length ? `<button class="g-carte trier${gSel==='trier'?' sel':''}" data-gf="trier"><b>À trier</b><span class="dt">Réponses non rattachées à une formation</span><span class="cpt"><span>${G.a_trier.length} réponse${G.a_trier.length>1?'s':''}</span></span></button>` : '')
+      + G.formations.map(f=>{ const n=demandesDe(f.id).length, g=G.groupes[f.id], r=g.retenus.length, p=placesDe(f.id);
+          return `<button class="g-carte${gSel===f.id?' sel':''}" data-gf="${esc(f.id)}"><b>${esc(f.titre)}</b><span class="dt">${esc(datesFormation(f))}</span>
+            <span class="cpt"><span>${n} demande${n>1?'s':''} · ${r}${p?' / '+p:` retenu${r>1?'s':''}`}${p&&r>p?` <span class="g-depasse">+${r-p}</span>`:''}</span>
+            <span class="g-b ${g.etat==='confirme'?'g-confirme':'g-ouvert'}">${g.etat==='confirme'?'Confirmé':'Ouvert'}</span></span></button>`; }).join('')
+      + `</div></section><section class="g-panneau" id="gPanneau">${gSel==='trier' ? panneauTri() : gSel ? panneauFormation() : ''}</section></div>`;
+  }
+  $('vueG').innerHTML = h;
+  rendreBarreG();
+  if ($('dlgG').open) rendreDlgG();
+}
+function panneauFormation(){
+  const f = G.formations.find(x=>x.id===gSel), g = G.groupes[gSel], fige = g.etat==='confirme', lignes = demandesDe(gSel);
+  const tete = `<div class="g-ptete"><h3>${esc(f.titre)}</h3><span class="dt">${esc(datesFormation(f))} ·
+     <label class="g-places">Places <input type="number" min="1" max="999" id="gPlaces" value="${placesDe(gSel)||''}" aria-label="Nombre de places"></label></span></div>`;
+  if (!lignes.length) return tete + `<p class="info">Aucune demande pour cette formation.</p>`;
+  return tete + `<table class="g-tab"><thead><tr><th class="c" title="Retenu">✓</th><th>Praticien</th><th class="c-tel">Téléphone</th><th>E-mail</th><th class="c-dem">Demande</th></tr></thead><tbody>`
+    + lignes.map(x=>{ const r=g.retenus.includes(x.id), autres=x.voeux.filter(v=>v!==gSel).map(v=>G.formations.find(f=>f.id===v)?.titre).filter(Boolean), nom=`${x.prenom} ${x.nom}`;
+        return `<tr class="${r?'retenu':''}"><td class="c"><input type="checkbox" data-gd="${esc(x.id)}" ${r?'checked':''} ${fige?'disabled':''} aria-label="Retenir ${esc(nom)}"></td>
+          <td class="g-nom" title="${esc(nom)}">${esc(nom)}${autres.length?`<span class="g-plus" title="${esc('A aussi demandé : '+autres.join(', '))}">+${autres.length}</span>`:''}</td>
+          <td class="g-tel${x.tel_valide?'':' g-douteux'}" ${x.tel_valide?'':'title="Numéro à vérifier"'}>${esc(x.tel)}</td>
+          <td class="g-mail" title="${esc(x.mail)}">${esc(x.mail)}</td>
+          <td>${esc(dateCourte(x.date))}${x.nouveau?' <span class="g-b g-nouveau">Nouveau</span>':''}</td></tr>`; }).join('')
+    + `</tbody></table>`;
+}
+function panneauTri(){
+  return `<div class="g-ptete"><h3>À trier</h3></div>
+    <table class="g-tab"><thead><tr><th style="width:170px">Praticien</th><th>Réponse au formulaire</th><th style="width:210px">Ranger sous</th></tr></thead><tbody>`
+    + G.a_trier.map(t=>{ const x=G.demandes.find(d=>d.id===t.demande), nom=x?`${x.prenom} ${x.nom}`:'';
+        return `<tr><td class="g-nom" title="${esc(nom)}">${esc(nom)}</td><td class="g-mail" title="${esc(t.choix)}">${esc(t.choix)}</td>
+          <td><select data-gtri="${esc(t.choix)}" aria-label="Ranger cette réponse" style="max-width:100%;padding:3px"><option value="">Choisir…</option>${G.formations.map(f=>`<option value="${esc(f.id)}">${esc(f.titre)} · ${esc(dateCourte(f.jours[0]))}</option>`).join('')}</select></td></tr>`; }).join('')
+    + `</tbody></table><p class="info">Une fois rangée, cette réponse rejoint la formation choisie, et Planéo s'en souvient pour toutes les réponses identiques.</p>`;
+}
+function rendreBarreG(){
+  const b=$('gBarre');
+  if (vue!=='groupes' || !gSel || gSel==='trier'){ b.hidden=true; return; }
+  const f=G.formations.find(x=>x.id===gSel), g=G.groupes[gSel], r=g.retenus.length, p=placesDe(gSel), trop=p?r-p:0;
+  b.hidden=false;
+  $('gBarreInt').innerHTML = `<span><b>${r} retenu${r>1?'s':''}${p?` sur ${p} place${p>1?'s':''}`:''}</b>${trop>0?` <span class="g-depasse">${trop} de plus que prévu</span>`:''}
+      <span class="g-nomg">Groupe : ${esc(`Cemedis Formations : ${f.titre} ${datesFormation(f)}`)}</span></span>
+    <span class="g-bt">` + (g.etat==='confirme'
+      ? `<button id="gRouvrir">Rouvrir</button><button class="principal" disabled title="Arrive à l'étape suivante : le robot WhatsApp">Constituer le groupe WhatsApp</button>`
+      : `<button class="principal" id="gConfirmer" ${r?'':'disabled'}>Confirmer le groupe</button>`) + `</span>`;
+}
+function rendreDlgG(){
+  $('gListeForms').innerHTML = G.formulaires.map(f=>`<div class="g-fligne"><span class="inf"><a href="${esc(f.lien)}" target="_blank" rel="noopener">${esc(f.nom)} ↗</a><small>${esc(f.lien)}</small></span><button type="button" data-gretire="${esc(f.id)}">Retirer</button></div>`).join('');
+  $('gRobot').innerHTML = G.robot
+    ? `Avant tout, partagez le classeur en <b>lecture</b> avec cette adresse :<br><code>${esc(G.robot)}</code>`
+    : `L'accès à Google n'est pas encore installé sur le serveur : Planéo ne peut pas encore lire les classeurs.`;
+}
+$('vueG').addEventListener('click', async e=>{
+  const c=e.target.closest('.g-carte');
+  if (c){ gSel=c.dataset.gf; rendreGroupes(); return; }
+  if (e.target.id==='gExpl'){ $('gErr').hidden=true; rendreDlgG(); $('dlgG').showModal(); return; }
+  if (e.target.id==='gRafr'){
+    e.target.disabled=true; e.target.textContent='Lecture en cours…';
+    await actionG('rafraichir', {}); 
+    const err=G.formulaires.find(f=>f.erreur);
+    if (err) toast(err.erreur, true);
+    else { const n=G.formulaires.reduce((t,f)=>t+(f.nouvelles||0),0); toast(n?`${n} nouvelle${n>1?'s':''} demande${n>1?'s':''}`:'Aucune nouvelle demande'); }
+  }
+});
+$('vueG').addEventListener('change', async e=>{
+  const d=e.target.dataset;
+  if (d.gd){ await actionG('retenir',{formation:gSel, demande:d.gd, retenu:e.target.checked}); return; }
+  if (d.gtri!==undefined && e.target.value){ const fid=e.target.value; if(await actionG('ranger',{choix:d.gtri, formation:fid},'Réponse rangée') && !G.a_trier.length) { gSel=fid; rendreGroupes(); } return; }
+  if (e.target.id==='gPlaces'){
+    const f=D.formations.find(x=>x.id===gSel), n=parseInt(e.target.value,10), avant=f.places;
+    if (n>0) f.places=n; else delete f.places;
+    if (await enregistrer('Nombre de places enregistré')) rendreGroupes(); else { if(avant) f.places=avant; else delete f.places; rendreGroupes(); }
+  }
+});
+$('gBarreInt').addEventListener('click', e=>{
+  if (e.target.id==='gConfirmer') actionG('etat',{formation:gSel, etat:'confirme'},'Groupe confirmé');
+  if (e.target.id==='gRouvrir') actionG('etat',{formation:gSel, etat:'ouvert'},'Groupe rouvert');
+});
+$('gAjout').onclick=async()=>{
+  const err=$('gErr'); err.hidden=true;
+  try {
+    G = await appel('groupes/formulaire',{nom:$('gNom').value, lien:$('gLien').value});
+    $('gNom').value=''; $('gLien').value=''; rendreGroupes();
+    const dernier=G.formulaires[G.formulaires.length-1];
+    if (dernier.erreur){ err.hidden=false; err.textContent=dernier.erreur; }
+    else { $('dlgG').close(); toast(`${dernier.recues||0} réponse${dernier.recues>1?'s':''} lue${dernier.recues>1?'s':''}`); }
+  } catch(x){ err.hidden=false; err.textContent=x.message; }
+};
+$('gListeForms').onclick=e=>{
+  const id=e.target.dataset.gretire;
+  if (id && confirm('Retirer ce formulaire ? Planéo ne le relira plus ; les demandes déjà relevées restent dans les tableaux.')) actionG('formulaire/retirer',{id},'Formulaire retiré');
+};
+
 // --- Démarrage ---
-$('vMois').classList.toggle('actif',vue==='mois'); $('vAnnee').classList.toggle('actif',vue==='annee'); $('vListe').classList.toggle('actif',vue==='liste');
+$('vMois').classList.toggle('actif',vue==='mois'); $('vAnnee').classList.toggle('actif',vue==='annee'); $('vListe').classList.toggle('actif',vue==='liste'); $('vGroupes').classList.toggle('actif',vue==='groupes');
 charger()
   .catch(e=>{ $('vue').innerHTML=`<div class="vide-msg">Le planning n'a pas pu être chargé : ${esc(e.message)}</div>`; });
 // Rafraîchit le planning quand on revient sur l'onglet (pour voir les dernières modifications).
-document.addEventListener('visibilitychange', ()=>{ if (!document.hidden && !document.querySelector('dialog[open]')) charger().catch(()=>{}); });
+document.addEventListener('visibilitychange', ()=>{ if (!document.hidden && !document.querySelector('dialog[open]')) { G = null; charger().catch(()=>{}); } });
 </script>
 </body>
 </html>

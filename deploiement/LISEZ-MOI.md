@@ -9,5 +9,14 @@
   `/portail` est fermée par `auth_request /_planeo_verif` (sans session : connexion DFM).
 - Mot de passe : celui de DFM (`/home/dfm/DFM/acces.json`), lu seulement, jamais écrit.
 
-Mettre à jour le code : copier `planeo/app.py` et `planeo/index.html` dans `/home/dfm/Planeo/`,
+Mettre à jour le code : copier `planeo/app.py`, `planeo/groupes.py`, `planeo/releve.py` et `planeo/index.html` dans `/home/dfm/Planeo/`,
 puis `systemctl restart planeo`.
+
+## Groupes (demandes d'inscription)
+
+- Données personnelles : `/home/dfm/Planeo/donnees/groupes.json` (lisible du seul service) et
+  `donnees/sauvegardes-groupes/` (50 dernières copies). Jamais dans le dépôt.
+- Relevé du matin : `planeo-releve.timer` (6 h) lance `releve.py`.
+- Accès Google : clé du compte de service dans `/home/dfm/Planeo/compte-google.json` (droits 600, jamais dans
+  le dépôt). Franck partage chaque classeur en lecture avec l'adresse de ce compte.
+- Dépendances du venv : `flask waitress google-auth requests`.

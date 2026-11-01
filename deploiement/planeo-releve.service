@@ -1,0 +1,12 @@
+[Unit]
+Description=Planeo - releve des classeurs de reponses
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=dfm
+Group=dfm
+WorkingDirectory=/home/dfm/Planeo
+Environment=PLANEO_DONNEES=/home/dfm/Planeo/donnees
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/home/dfm/Planeo/venv/bin/python releve.py

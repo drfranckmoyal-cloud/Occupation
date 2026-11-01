@@ -253,3 +253,8 @@ formation pleine en préfixant le choix par « /////COMPLET ////// » : le tri d
 Cadrage terminé le 01/11/2026 (maquette `maquette/groupes.html`). Prochaine étape, sur feu vert de Franck : Étape 1, tout ce qui est dans Planéo (places, tableau, lecture du classeur, confirmer/rouvrir), essai sur un classeur de test. Étape 2 ensuite : robot WhatsApp, essai sur un petit groupe de test.
 À savoir pour la construction : le lien d'un formulaire permet d'y répondre, pas de lire les réponses ; Franck
 devra donner une fois l'autorisation Google sur le compte propriétaire des formulaires.
+
+- **01/11/2026** — Groupes, étape 1 construite : `planeo/groupes.py` (lecture du classeur, tri par date, demandes),
+  `planeo/releve.py` (relevé du matin), onglet Groupes et nombre de places dans `planeo/index.html`.
+  47 essais (`planeo/test_groupes.py`) et essai de bout en bout sur un faux classeur. La colonne « Répertoire » est
+  reportée à l'étape 2 : sans accès à Google Contacts, elle ne dirait rien de vrai.
