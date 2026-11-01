@@ -214,4 +214,10 @@ Décisions de Franck (01/11/2026) :
 - G6 **Aucun lien avec DFM** pour le moment.
 - G7 **Pas de demande de consentement** dans le formulaire, ni rien qui s'en rapproche (décision de Franck).
 
+- G8 **Réservé aux formations de l'organisme CEMEDIS** : les autres organismes n'apparaissent pas dans Groupes.
+- G9 **Bouton « Formulaires »** : Franck y colle le lien de chaque formulaire Google ; le lien en cours est
+  cliquable en haut de la page. Lignes du tableau fines (30 px).
+
 Étape en cours : maquette du tableau des demandes, `maquette/groupes.html` (fictive), à valider avant la suite.
+À savoir pour la construction : le lien d'un formulaire permet d'y répondre, pas de lire les réponses ; Franck
+devra donner une fois l'autorisation Google sur le compte propriétaire des formulaires.
