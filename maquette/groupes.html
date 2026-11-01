@@ -48,7 +48,8 @@
   td.c{width:40px;text-align:center}
   input[type=checkbox]{width:19px;height:19px;accent-color:var(--accent);cursor:pointer}
   input[type=checkbox]:disabled{cursor:not-allowed}
-  .nom{font-weight:600}
+  .nom{font-weight:600;min-width:200px}
+  .mail{display:block;color:var(--doux);font-size:13px;overflow-wrap:anywhere}
   .aussi{display:block;color:var(--doux);font-size:12px;font-weight:400}
   .tel{white-space:nowrap;font-variant-numeric:tabular-nums}
   .doux{color:var(--doux)}
@@ -133,11 +134,11 @@ function rendre(){
 function rendreFormation(){
   const f = formation(sel), fige = f.etat==='confirme', lignes = demandes(sel);
   $('panneau').innerHTML = `<div class="ptete"><h3>${f.titre}</h3><span class="dt">${f.dates}</span></div>
-    <table><thead><tr><th>Retenu</th><th>Praticien</th><th>Téléphone</th><th>E-mail</th><th>Demande</th><th>Répertoire</th></tr></thead><tbody>`
+    <table><thead><tr><th>Retenu</th><th>Praticien</th><th>Coordonnées</th><th>Demande</th><th>Répertoire</th></tr></thead><tbody>`
     + lignes.map(p=>{ const r=retenus[sel].has(p.id), autres=p.voeux.filter(v=>v!==sel).map(v=>formation(v).titre);
       return `<tr class="${r?'retenu':''}"><td class="c"><input type="checkbox" data-p="${p.id}" ${r?'checked':''} ${fige?'disabled':''} aria-label="Retenir ${p.nom}"></td>
         <td class="nom">${p.nom}${autres.length?`<span class="aussi">A aussi demandé : ${autres.join(', ')}</span>`:''}</td>
-        <td class="tel">${p.tel}</td><td class="doux">${p.mail}</td>
+        <td><span class="tel">${p.tel}</span><span class="mail">${p.mail}</span></td>
         <td>${p.date}${p.nouveau?' <span class="badge b-creer">Nouveau</span>':''}</td><td>${badgeRep(p)}</td></tr>`;}).join('')
     + `</tbody></table>`;
   const r = retenus[sel].size, b = $('barre'); b.hidden = false;
