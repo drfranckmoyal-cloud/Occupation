@@ -218,6 +218,10 @@ Décisions de Franck (01/11/2026) :
 - G9 **Bouton « Formulaires »** : Franck y colle le lien de chaque formulaire Google ; le lien en cours est
   cliquable en haut de la page. Lignes du tableau fines (30 px).
 
+- G10 **Formulaires sur le compte Google drfranckmoyal@gmail.com** ; aucun formulaire n'existe encore (01/11/2026).
+- G11 **Nombre de places fixé à la création de la formation dans Planéo**, indicatif : Franck peut en cocher plus ;
+  simple mention discrète en cas de dépassement, jamais de demande de confirmation.
+
 Étape en cours : maquette du tableau des demandes, `maquette/groupes.html` (fictive), à valider avant la suite.
 À savoir pour la construction : le lien d'un formulaire permet d'y répondre, pas de lire les réponses ; Franck
 devra donner une fois l'autorisation Google sur le compte propriétaire des formulaires.

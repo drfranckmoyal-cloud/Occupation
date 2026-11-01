@@ -62,6 +62,9 @@
   .barre .boutons{display:flex;flex-wrap:wrap;gap:8px}
   .barre b{font-size:16px}
   .nomgroupe{color:var(--doux);font-size:13px;display:block}
+  .depasse{color:var(--ambre);font-size:13px;font-weight:600}
+  .places{font-size:14px;color:var(--doux)}
+  .places input{font:inherit;width:58px;padding:2px 4px;border:1px solid var(--trait);border-radius:6px;color:var(--texte)}
   select{font:inherit;padding:6px;border:1px solid var(--trait);border-radius:8px;max-width:100%}
   .note{margin:12px 0 0;color:var(--doux);font-size:13px}
   a{color:var(--accent)}
@@ -133,9 +136,9 @@
 
 <script>
 const F = [
-  {id:'kat', titre:'KAT ENDO : RTE', dates:'25 novembre 2026', court:'25 novembre 2026', etat:'ouvert', cree:false},
-  {id:'usu', titre:'KAT ENDO : VPT', dates:'9 décembre 2026', court:'9 décembre 2026', etat:'ouvert', cree:false},
-  {id:'occ', titre:'KAT ENDO : TEI', dates:'14 janvier 2027', court:'14 janvier 2027', etat:'ouvert', cree:false},
+  {id:'kat', titre:'KAT ENDO : RTE', dates:'25 novembre 2026', court:'25 novembre 2026', etat:'ouvert', cree:false, places:2},
+  {id:'usu', titre:'KAT ENDO : VPT', dates:'9 décembre 2026', court:'9 décembre 2026', etat:'ouvert', cree:false, places:12},
+  {id:'occ', titre:'KAT ENDO : TEI', dates:'14 janvier 2027', court:'14 janvier 2027', etat:'ouvert', cree:false, places:12},
 ];
 // Une personne qui demande deux formations figure sous chacune d'elles.
 const P = [
@@ -169,13 +172,13 @@ function rendre(){
   $('liste').innerHTML = (t.length ? `<button class="fcarte trier${sel==='trier'?' sel':''}" data-f="trier"><b>À trier</b><span class="dt">Réponses non rattachées à une formation</span><span class="cpt"><span>${t.length} réponse${t.length>1?'s':''}</span></span></button>` : '')
     + F.map(f=>{ const n=demandes(f.id).length, r=retenus[f.id].size;
       return `<button class="fcarte${sel===f.id?' sel':''}" data-f="${f.id}"><b>${f.titre}</b><span class="dt">${f.dates}</span>
-        <span class="cpt"><span>${n} demande${n>1?'s':''} · ${r} retenu${r>1?'s':''}</span>${f.etat==='confirme'?'<span class="badge b-confirme">Confirmé</span>':'<span class="badge b-ouvert">Ouvert</span>'}</span></button>`;}).join('');
+        <span class="cpt"><span>${n} demande${n>1?'s':''} · ${r} / ${f.places}${r>f.places?' <span class="depasse">+'+(r-f.places)+'</span>':''}</span>${f.etat==='confirme'?'<span class="badge b-confirme">Confirmé</span>':'<span class="badge b-ouvert">Ouvert</span>'}</span></button>`;}).join('');
   if (sel==='trier') rendreTri(); else rendreFormation();
 }
 
 function rendreFormation(){
   const f = formation(sel), fige = f.etat==='confirme', lignes = demandes(sel);
-  $('panneau').innerHTML = `<div class="ptete"><h3>${f.titre}</h3><span class="dt">${f.dates}</span></div>
+  $('panneau').innerHTML = `<div class="ptete"><h3>${f.titre}</h3><span class="dt">${f.dates} · <label class="places">Places <input type="number" min="1" id="places" value="${f.places}" aria-label="Nombre de places"></label></span></div>
     <table><thead><tr><th class="c" title="Retenu">✓</th><th>Praticien</th><th class="c-tel">Téléphone</th><th>E-mail</th><th class="c-dem">Demande</th><th class="c-rep">Répertoire</th></tr></thead><tbody>`
     + lignes.map(p=>{ const r=retenus[sel].has(p.id), autres=p.voeux.filter(v=>v!==sel).map(v=>formation(v).titre);
       return `<tr class="${r?'retenu':''}"><td class="c"><input type="checkbox" data-p="${p.id}" ${r?'checked':''} ${fige?'disabled':''} aria-label="Retenir ${p.nom}"></td>
@@ -186,7 +189,8 @@ function rendreFormation(){
   const r = retenus[sel].size, b = $('barre'); b.hidden = false;
   const manquants = lignes.filter(p=>retenus[sel].has(p.id) && !p.rep).length;
   const nomGroupe = `Cemedis Formations : ${f.titre} ${f.court}`;
-  $('barreInt').innerHTML = `<span><b>${r} praticien${r>1?'s':''} retenu${r>1?'s':''}</b>${manquants?` · ${manquants} à créer dans le répertoire`:''}<span class="nomgroupe">Groupe : ${nomGroupe}</span></span>
+  const trop = r - f.places;
+  $('barreInt').innerHTML = `<span><b>${r} retenu${r>1?'s':''} sur ${f.places} places</b>${trop>0?` <span class="depasse">${trop} de plus que prévu</span>`:''}${manquants?` · ${manquants} à créer dans le répertoire`:''}<span class="nomgroupe">Groupe : ${nomGroupe}</span></span>
     <span class="boutons">` + (fige
       ? `<button id="rouvrir">Rouvrir</button><button class="principal" id="wa">Constituer le groupe WhatsApp</button>`
       : `<button class="principal" id="confirmer" ${r?'':'disabled'}>Confirmer le groupe</button>`) + `</span>`;
@@ -218,6 +222,7 @@ document.body.addEventListener('click', e=>{
 });
 document.body.addEventListener('change', e=>{
   if (e.target.dataset.p){ const id=+e.target.dataset.p; e.target.checked ? retenus[sel].add(id) : retenus[sel].delete(id); rendre(); }
+  if (e.target.id==='places' && +e.target.value>0){ formation(sel).places=+e.target.value; rendre(); }
   if (e.target.dataset.tri && e.target.value){ P.find(p=>p.id===+e.target.dataset.tri).voeux.push(e.target.value); if(!aTrier().length) sel=e.target.value; rendre(); }
 });
 rendre();
