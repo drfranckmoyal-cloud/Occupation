@@ -222,6 +222,12 @@ Décisions de Franck (01/11/2026) :
 - G11 **Nombre de places fixé à la création de la formation dans Planéo**, indicatif : Franck peut en cocher plus ;
   simple mention discrète en cas de dépassement, jamais de demande de confirmation.
 
+Formulaire d'exemple fourni par Franck (01/11/2026, compte drfranckmoyal, 51 réponses, lu sans modification) :
+`docs.google.com/forms/d/1a99L3GVDE8JdS6BEaInYg9QsaxoJ7RmMbNC2ekP_jiE/edit`. Questions : NOM (majuscules), Prénom,
+@adresse mail, Numéro téléphone, Demande d'inscription (cases à cocher, plusieurs choix). Franck signale une
+formation pleine en préfixant le choix par « /////COMPLET ////// » : le tri doit ignorer ce préfixe. Choix écrit
+« Lundi 31 novembre 2026 » (date impossible) alors que le texte d'accueil dit lundi 30 novembre.
+
 Étape en cours : maquette du tableau des demandes, `maquette/groupes.html` (fictive), à valider avant la suite.
 À savoir pour la construction : le lien d'un formulaire permet d'y répondre, pas de lire les réponses ; Franck
 devra donner une fois l'autorisation Google sur le compte propriétaire des formulaires.
