@@ -228,6 +228,12 @@ Formulaire d'exemple fourni par Franck (01/11/2026, compte drfranckmoyal, 51 ré
 formation pleine en préfixant le choix par « /////COMPLET ////// » : le tri doit ignorer ce préfixe. Choix écrit
 « Lundi 31 novembre 2026 » (date impossible) alors que le texte d'accueil dit lundi 30 novembre.
 
+- G12 **Le formulaire d'exemple n'est pas à exploiter** (Franck l'a déjà traité) : ses 51 réponses n'entrent pas dans
+  Planéo. Il sert seulement de modèle ; le premier relevé réel attendra le prochain formulaire.
+- G13 **Pas de mail de confirmation** pour le moment.
+- G14 **Tri par la date** lue dans le choix du formulaire, en ignorant « /////COMPLET////// » ; sans correspondance
+  unique, le choix va dans « À trier » et le rangement est mémorisé.
+
 Étape en cours : maquette du tableau des demandes, `maquette/groupes.html` (fictive), à valider avant la suite.
 À savoir pour la construction : le lien d'un formulaire permet d'y répondre, pas de lire les réponses ; Franck
 devra donner une fois l'autorisation Google sur le compte propriétaire des formulaires.
