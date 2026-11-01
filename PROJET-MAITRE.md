@@ -242,6 +242,10 @@ formation pleine en préfixant le choix par « /////COMPLET ////// » : le tri d
   lien pour rejoindre le groupe WhatsApp d'information : [lien]. Dr Franck Moyal ».
 - G18 **Aucun message d'accueil** dans le groupe à sa création.
 
+- G19 (demande de Franck, 01/11/2026) **Plus aucune intervention dans Claude pour créer les groupes : tout depuis
+  Planéo.** Remet en cause G3. En attente de son choix : petit robot sur le Mac (recommandé) ou programme non
+  officiel sur le serveur. Les deux sont de l'automatisation que les conditions de WhatsApp n'autorisent pas.
+
 Étape en cours : maquette du tableau des demandes, `maquette/groupes.html` (fictive), à valider avant la suite.
 À savoir pour la construction : le lien d'un formulaire permet d'y répondre, pas de lire les réponses ; Franck
 devra donner une fois l'autorisation Google sur le compte propriétaire des formulaires.
