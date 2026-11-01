@@ -243,9 +243,13 @@ formation pleine en préfixant le choix par « /////COMPLET ////// » : le tri d
 - G18 **Aucun message d'accueil** dans le groupe à sa création.
 
 - G19 (demande de Franck, 01/11/2026) **Plus aucune intervention dans Claude pour créer les groupes : tout depuis
-  Planéo.** Remet en cause G3. En attente de son choix : petit robot sur le Mac (recommandé) ou programme non
-  officiel sur le serveur. Les deux sont de l'automatisation que les conditions de WhatsApp n'autorisent pas.
+  Planéo.** Remplace G3.
+- G20 **Robot sur ce Mac** (allumé en journée), choix de Franck, risque de suspension du numéro exposé et accepté :
+  les conditions de WhatsApp n'autorisent pas l'automatisation. Le robot surveille Planéo et utilise WhatsApp Web
+  dans sa propre fenêtre. À ranger hors du Bureau : macOS interdit le Bureau aux tâches automatiques.
+- G21 Chaque membre : **ajout direct tenté d'abord, lien d'invitation seulement si WhatsApp ne le permet pas.**
+  Pas de geste sur l'iPhone : un contact tout juste créé que WhatsApp ne voit pas encore reçoit le lien.
 
-Étape en cours : maquette du tableau des demandes, `maquette/groupes.html` (fictive), à valider avant la suite.
+Cadrage terminé le 01/11/2026 (maquette `maquette/groupes.html`). Prochaine étape, sur feu vert de Franck : Étape 1, tout ce qui est dans Planéo (places, tableau, lecture du classeur, confirmer/rouvrir), essai sur un classeur de test. Étape 2 ensuite : robot WhatsApp, essai sur un petit groupe de test.
 À savoir pour la construction : le lien d'un formulaire permet d'y répondre, pas de lire les réponses ; Franck
 devra donner une fois l'autorisation Google sur le compte propriétaire des formulaires.
