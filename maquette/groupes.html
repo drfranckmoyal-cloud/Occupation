@@ -234,7 +234,7 @@ document.body.addEventListener('click', e=>{
   if (e.target.dataset.retire!==undefined){ FORMS.splice(+e.target.dataset.retire,1); rendreForms(); }
   if (e.target.id==='ajForm'){
     const nom=$('nNom').value.trim(), lien=$('nLien').value.trim(), err=$('nErr');
-    if (!nom || !/^https:\/\/docs\.google\.com\/spreadsheets\//.test(lien)){ err.hidden=false; err.textContent='Indiquez un nom et le lien d'un classeur Google Sheets (docs.google.com/spreadsheets).'; return; }
+    if (!nom || !/^https:\/\/docs\.google\.com\/spreadsheets\//.test(lien)){ err.hidden=false; err.textContent='Indiquez un nom et le lien d’un classeur Google Sheets (docs.google.com/spreadsheets).'; return; }
     err.hidden=true; FORMS.push({nom,lien}); $('nNom').value=''; $('nLien').value=''; rendreForms();
   }
   if (e.target.id==='wa'){ alert('Étape suivante : la constitution du groupe sera cadrée une fois ce tableau validé.'); }
