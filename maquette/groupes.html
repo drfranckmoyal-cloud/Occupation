@@ -168,7 +168,7 @@ const badgeRep = p => p.rep ? '<span class="badge b-rep">Présent</span>' : '<sp
 
 function rendreForms(){
   $('ligneForm').innerHTML = FORMS.length
-    ? FORMS.map(f=>`Formulaire : <a class="lienform" href="${f.lien}" target="_blank" rel="noopener" title="Ouvrir le classeur des réponses">${f.nom} ↗</a> · relevé ${f.releve||'demain à 6 h'} · <b>${f.recues||0}</b> réponses, dont <b>${f.nouvelles||0}</b> nouvelles`).join('<br>')
+    ? FORMS.map(f=>`Formulaire : <a class="lienform" href="${f.lien}" target="_blank" rel="noopener" title="Ouvrir le classeur des réponses">${f.nom} ↗</a> · relevé ${f.releve||'demain à 6 h'} · <b>${f.recues||0}</b> réponses, dont <b>${f.nouvelles||0}</b> nouvelle${(f.nouvelles||0)>1?'s':''}`).join('<br>')
     : `Aucun formulaire exploité : cliquez sur « Exploiter un formulaire » et collez le lien du classeur des réponses.`;
   $('rafraichir').disabled = !FORMS.length;
   $('listeForms').innerHTML = FORMS.map((f,i)=>`<div class="fligne"><span class="inf"><a href="${f.lien}" target="_blank" rel="noopener">${f.nom} ↗</a><small>${f.lien}</small></span><button data-retire="${i}">Retirer</button></div>`).join('');
@@ -224,7 +224,7 @@ document.body.addEventListener('click', e=>{
     if (!dejaRafraichi){
       dejaRafraichi = true;
       P.forEach(p=>p.nouveau=false);
-      P.push({id:8, nom:'Dr Hélène NOUVELLE', tel:'06 00 00 00 08', mail:'helene.nouvelle@exemple.fr', date:"aujourd'hui", rep:false, voeux:['kat'], nouveau:true});
+      P.push({id:8, nom:'Dr Hélène NOUVELLE', tel:'06 00 00 00 08', mail:'helene.nouvelle@exemple.fr', date:'1er nov.', rep:false, voeux:['kat'], nouveau:true});
       f.recues=(f.recues||0)+1; f.nouvelles=1;
     } else f.nouvelles=0;
     f.releve="à l'instant"; rendre(); return;
