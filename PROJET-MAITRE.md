@@ -205,8 +205,13 @@ tableau des demandes → Franck coche les praticiens retenus → « Confirmer le
 bouton « Constituer le groupe WhatsApp » → si la liste change ensuite, proposer retrait/ajout → créer dans
 le répertoire les inscrits absents. Nom du groupe : « Cemedis Formations : <nom> <date> ».
 
-Questions à trancher par Franck : C1 quel Forms (Google ou Microsoft) ; C2 un formulaire par formation ou un
-seul ; C3 comment agir sur WhatsApp (recommandation : assisté depuis le Chrome du Mac, validation à chaque
-fois) ; C4 ajout direct ou lien d'invitation ; C5 groupe de discussion ou d'annonces ; C6 articulation avec
-DFM ; C7 mention de consentement dans le formulaire (numéro visible des autres membres).
-Prochaine étape : réponses de Franck à C1–C7, puis maquette du tableau des demandes.
+Décisions de Franck (01/11/2026) :
+- G1 **Google Forms.**
+- G2 **Un seul formulaire pour toutes les formations d'une période** : les réponses sont à trier par formation.
+- G3 **Option A** : création assistée depuis le Chrome du Mac (WhatsApp Web), pas d'API, pas de programme non officiel.
+- G4 **Ajout direct** ; si impossible, **envoi direct du lien d'invitation**.
+- G5 **Groupe d'annonces** (seuls les administrateurs écrivent).
+- G6 **Aucun lien avec DFM** pour le moment.
+- G7 **Pas de demande de consentement** dans le formulaire, ni rien qui s'en rapproche (décision de Franck).
+
+Étape en cours : maquette du tableau des demandes, `maquette/groupes.html` (fictive), à valider avant la suite.

@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Planéo — Groupes (maquette)</title>
+<style>
+  :root{
+    --fond:#f6f5f2; --carte:#fff; --texte:#1f2328; --doux:#6b7280; --trait:#e3e1dc;
+    --accent:#1f4e79; --alerte:#b42318; --ok:#0f7b55; --ambre:#9a5b00; --libre:#efede8;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--fond);color:var(--texte);font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  button{font:inherit;color:inherit;border:1px solid var(--trait);background:var(--carte);border-radius:8px;padding:6px 12px;cursor:pointer}
+  button:hover{border-color:var(--doux)}
+  button.actif,button.principal{background:var(--accent);color:#fff;border-color:var(--accent)}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  header{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--carte);border-bottom:1px solid var(--trait)}
+  h1{font-size:19px;margin:0;letter-spacing:-.3px}
+  h1 span{font-size:14px;font-weight:400;color:var(--doux);margin-left:8px;letter-spacing:0}
+  .nav{display:flex;gap:8px;flex-wrap:wrap}
+  .bandeau{background:#fff7e0;border-bottom:1px solid #f0d58a;padding:8px 20px;font-size:13px;text-align:center}
+  main{max-width:1200px;margin:0 auto;padding:16px 20px 90px;display:grid;grid-template-columns:300px minmax(0,1fr);gap:16px;align-items:start}
+  .releve{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;color:var(--doux);font-size:14px}
+  .releve b{color:var(--texte)}
+  h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--doux);margin:0 0 8px}
+  .liste{display:flex;flex-direction:column;gap:8px}
+  .fcarte{display:block;width:100%;text-align:left;background:var(--carte);border:1px solid var(--trait);border-radius:10px;padding:10px 12px}
+  .fcarte.sel{border:2px solid var(--accent);padding:9px 11px}
+  .fcarte b{display:block;font-size:14px}
+  .fcarte .dt{display:block;color:var(--doux);font-size:13px;margin:1px 0 6px}
+  .fcarte .cpt{display:flex;justify-content:space-between;gap:8px;font-size:13px;align-items:center}
+  .fcarte.trier{background:#fff7ea;border-color:#e7b96a}
+  .badge{display:inline-block;font-size:12px;font-weight:600;border-radius:12px;padding:1px 8px;white-space:nowrap}
+  .b-ouvert{background:var(--libre);color:var(--doux)}
+  .b-confirme{background:#e3f4ec;color:var(--ok)}
+  .b-rep{background:#e3f4ec;color:var(--ok)}
+  .b-creer{background:#fff1d9;color:var(--ambre)}
+  .panneau{background:var(--carte);border:1px solid var(--trait);border-radius:12px;padding:16px;min-width:0}
+  .ptete{display:flex;flex-wrap:wrap;gap:8px 14px;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+  .ptete h3{font-size:22px;margin:0;letter-spacing:-.3px}
+  .ptete .dt{color:var(--doux)}
+  table{width:100%;border-collapse:collapse}
+  th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--doux);text-align:left;padding:6px 8px;border-bottom:1px solid var(--trait)}
+  td{padding:9px 8px;border-bottom:1px solid #f0eee9;vertical-align:middle}
+  tr.retenu td{background:#f1f6fb}
+  tr.retenu td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
+  td.c{width:40px;text-align:center}
+  input[type=checkbox]{width:19px;height:19px;accent-color:var(--accent);cursor:pointer}
+  input[type=checkbox]:disabled{cursor:not-allowed}
+  .nom{font-weight:600}
+  .aussi{display:block;color:var(--doux);font-size:12px;font-weight:400}
+  .tel{white-space:nowrap;font-variant-numeric:tabular-nums}
+  .doux{color:var(--doux)}
+  .barre{position:fixed;left:0;right:0;bottom:0;background:var(--carte);border-top:1px solid var(--trait);padding:12px 20px;box-shadow:0 -6px 20px #0000000d}
+  .barre>div{max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between}
+  .barre .boutons{display:flex;flex-wrap:wrap;gap:8px}
+  .barre b{font-size:16px}
+  .nomgroupe{color:var(--doux);font-size:13px;display:block}
+  select{font:inherit;padding:6px;border:1px solid var(--trait);border-radius:8px;max-width:100%}
+  .note{margin:12px 0 0;color:var(--doux);font-size:13px}
+  @media (max-width:800px){
+    main{grid-template-columns:minmax(0,1fr);padding:12px 12px 130px}
+    header{padding:10px 12px}
+    .bandeau{padding:8px 12px}
+    .barre{padding:10px 12px}
+    thead{display:none}
+    table,tbody,tr,td{display:block;width:100%}
+    tr{position:relative;padding:10px 8px 10px 44px;border-bottom:1px solid #f0eee9}
+    td{padding:1px 0;border:none;background:none!important;box-shadow:none!important}
+    td.c{position:absolute;left:10px;top:12px;width:auto}
+    tr.retenu{background:#f1f6fb}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Planéo <span>Occupation de la salle de formation</span></h1>
+  <div class="nav">
+    <button>Mois</button><button>Année</button><button>Liste</button>
+    <button class="actif">Groupes</button>
+  </div>
+</header>
+<div class="bandeau"><b>Maquette</b> — praticiens fictifs, rien n'est relié au formulaire ni à WhatsApp.</div>
+
+<main>
+  <div class="releve">
+    <span>Formulaire : <b>Inscriptions — période fictive</b></span>
+    <span>Dernier relevé : <b>ce matin à 6 h</b></span>
+    <span><b>7</b> réponses reçues, dont <b>2</b> nouvelles</span>
+  </div>
+  <section>
+    <h2>Formations</h2>
+    <div class="liste" id="liste"></div>
+  </section>
+  <section class="panneau" id="panneau"></div>
+</main>
+<div class="barre" id="barre" hidden><div id="barreInt"></div></div>
+
+<script>
+const F = [
+  {id:'kat', titre:'KAT ENDO : RTE', dates:'25 novembre 2026', court:'25 novembre 2026', etat:'ouvert', cree:false},
+  {id:'usu', titre:'USURES : savoir réaliser un cas de A à Z', dates:'9 et 10 décembre 2026', court:'9-10 décembre 2026', etat:'ouvert', cree:false},
+  {id:'occ', titre:'OCCLUSAL OVERVIEW', dates:'14 janvier 2027', court:'14 janvier 2027', etat:'ouvert', cree:false},
+];
+// Une personne qui demande deux formations figure sous chacune d'elles.
+const P = [
+  {id:1, nom:'Dr Alice EXEMPLE', tel:'06 00 00 00 01', mail:'alice.exemple@exemple.fr', date:'28 oct.', rep:true,  voeux:['kat','usu'], nouveau:false},
+  {id:2, nom:'Dr Bruno FICTIF', tel:'06 00 00 00 02', mail:'bruno.fictif@exemple.fr', date:'29 oct.', rep:false, voeux:['kat'], nouveau:false},
+  {id:3, nom:'Dr Claire MODELE', tel:'06 00 00 00 03', mail:'claire.modele@exemple.fr', date:'30 oct.', rep:true,  voeux:['kat'], nouveau:false},
+  {id:4, nom:'Dr David ESSAI', tel:'06 00 00 00 04', mail:'david.essai@exemple.fr', date:'31 oct.', rep:false, voeux:['kat','occ'], nouveau:true},
+  {id:5, nom:'Dr Emma TEST', tel:'06 00 00 00 05', mail:'emma.test@exemple.fr', date:'31 oct.', rep:true,  voeux:['usu'], nouveau:true},
+  {id:6, nom:'Dr Farid SPECIMEN', tel:'06 00 00 00 06', mail:'farid.specimen@exemple.fr', date:'27 oct.', rep:true, voeux:[], lu:'Endo novembre ?', nouveau:false},
+  {id:7, nom:'Dr Gaëlle DEMO', tel:'06 00 00 00 07', mail:'gaelle.demo@exemple.fr', date:'26 oct.', rep:false, voeux:[], lu:'Formation occlusion', nouveau:false},
+];
+const retenus = {kat:new Set([1,3]), usu:new Set(), occ:new Set()};
+let sel = 'kat';
+const $ = id => document.getElementById(id);
+const formation = id => F.find(f=>f.id===id);
+const demandes = id => P.filter(p=>p.voeux.includes(id));
+const aTrier = () => P.filter(p=>!p.voeux.length);
+const badgeRep = p => p.rep ? '<span class="badge b-rep">Dans le répertoire</span>' : '<span class="badge b-creer">À créer</span>';
+
+function rendre(){
+  const t = aTrier();
+  $('liste').innerHTML = (t.length ? `<button class="fcarte trier${sel==='trier'?' sel':''}" data-f="trier"><b>À trier</b><span class="dt">Réponses non rattachées à une formation</span><span class="cpt"><span>${t.length} réponse${t.length>1?'s':''}</span></span></button>` : '')
+    + F.map(f=>{ const n=demandes(f.id).length, r=retenus[f.id].size;
+      return `<button class="fcarte${sel===f.id?' sel':''}" data-f="${f.id}"><b>${f.titre}</b><span class="dt">${f.dates}</span>
+        <span class="cpt"><span>${n} demande${n>1?'s':''} · ${r} retenu${r>1?'s':''}</span>${f.etat==='confirme'?'<span class="badge b-confirme">Confirmé</span>':'<span class="badge b-ouvert">Ouvert</span>'}</span></button>`;}).join('');
+  if (sel==='trier') rendreTri(); else rendreFormation();
+}
+
+function rendreFormation(){
+  const f = formation(sel), fige = f.etat==='confirme', lignes = demandes(sel);
+  $('panneau').innerHTML = `<div class="ptete"><h3>${f.titre}</h3><span class="dt">${f.dates}</span></div>
+    <table><thead><tr><th>Retenu</th><th>Praticien</th><th>Téléphone</th><th>E-mail</th><th>Demande</th><th>Répertoire</th></tr></thead><tbody>`
+    + lignes.map(p=>{ const r=retenus[sel].has(p.id), autres=p.voeux.filter(v=>v!==sel).map(v=>formation(v).titre);
+      return `<tr class="${r?'retenu':''}"><td class="c"><input type="checkbox" data-p="${p.id}" ${r?'checked':''} ${fige?'disabled':''} aria-label="Retenir ${p.nom}"></td>
+        <td class="nom">${p.nom}${autres.length?`<span class="aussi">A aussi demandé : ${autres.join(', ')}</span>`:''}</td>
+        <td class="tel">${p.tel}</td><td class="doux">${p.mail}</td>
+        <td>${p.date}${p.nouveau?' <span class="badge b-creer">Nouveau</span>':''}</td><td>${badgeRep(p)}</td></tr>`;}).join('')
+    + `</tbody></table>`;
+  const r = retenus[sel].size, b = $('barre'); b.hidden = false;
+  const manquants = lignes.filter(p=>retenus[sel].has(p.id) && !p.rep).length;
+  const nomGroupe = `Cemedis Formations : ${f.titre} ${f.court}`;
+  $('barreInt').innerHTML = `<span><b>${r} praticien${r>1?'s':''} retenu${r>1?'s':''}</b>${manquants?` · ${manquants} à créer dans le répertoire`:''}<span class="nomgroupe">Groupe : ${nomGroupe}</span></span>
+    <span class="boutons">` + (fige
+      ? `<button id="rouvrir">Rouvrir</button><button class="principal" id="wa">Constituer le groupe WhatsApp</button>`
+      : `<button class="principal" id="confirmer" ${r?'':'disabled'}>Confirmer le groupe</button>`) + `</span>`;
+}
+
+function rendreTri(){
+  $('barre').hidden = true;
+  $('panneau').innerHTML = `<div class="ptete"><h3>À trier</h3></div>
+    <table><thead><tr><th>Praticien</th><th>Réponse au formulaire</th><th>Téléphone</th><th>Ranger sous</th></tr></thead><tbody>`
+    + aTrier().map(p=>`<tr><td class="nom">${p.nom}</td><td class="doux">« ${p.lu} »</td><td class="tel">${p.tel}</td>
+      <td><select data-tri="${p.id}" aria-label="Ranger ${p.nom}"><option value="">Choisir…</option>${F.map(f=>`<option value="${f.id}">${f.titre}</option>`).join('')}</select></td></tr>`).join('')
+    + `</tbody></table><p class="note">Ces réponses n'ont pas pu être rattachées à une formation. Une fois rangées, elles rejoignent le tableau de la formation choisie.</p>`;
+}
+
+document.body.addEventListener('click', e=>{
+  const c = e.target.closest('.fcarte');
+  if (c){ sel = c.dataset.f; rendre(); return; }
+  if (e.target.id==='confirmer'){ formation(sel).etat='confirme'; rendre(); }
+  if (e.target.id==='rouvrir'){ formation(sel).etat='ouvert'; rendre(); }
+  if (e.target.id==='wa'){ alert('Étape suivante : la constitution du groupe sera cadrée une fois ce tableau validé.'); }
+});
+document.body.addEventListener('change', e=>{
+  if (e.target.dataset.p){ const id=+e.target.dataset.p; e.target.checked ? retenus[sel].add(id) : retenus[sel].delete(id); rendre(); }
+  if (e.target.dataset.tri && e.target.value){ P.find(p=>p.id===+e.target.dataset.tri).voeux.push(e.target.value); if(!aTrier().length) sel=e.target.value; rendre(); }
+});
+rendre();
+</script>
+</body>
+</html>
