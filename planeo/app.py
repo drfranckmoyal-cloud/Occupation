@@ -22,6 +22,9 @@ from urllib.parse import urlparse
 
 from flask import Flask, jsonify, redirect, request, send_file, session
 
+import sys
+sys.modules.setdefault("app", sys.modules[__name__])   # groupes.py relit le planning par « app »
+
 DOSSIER = os.path.dirname(os.path.abspath(__file__))
 ACCES = (os.environ.get("PLANEO_ACCES") or "").strip() or os.path.join(DOSSIER, "acces.json")
 DONNEES = (os.environ.get("PLANEO_DONNEES") or "").strip() or os.path.join(DOSSIER, "donnees")
@@ -163,8 +166,13 @@ def valider(d):
         if not i or i in fids or org not in ids or not titre or cr not in CRENEAUX or not jours:
             raise Invalide("Formation invalide : " + (titre or "sans titre") + ".")
         fids.add(i)
-        forms.append({"id": i, "org": org, "titre": titre, "creneau": cr,
-                      "jours": jours, "note": _texte(f.get("note"), 1000)})
+        ligne = {"id": i, "org": org, "titre": titre, "creneau": cr,
+                 "jours": jours, "note": _texte(f.get("note"), 1000)}
+        # Nombre de places : indicatif (formations CEMEDIS), et seulement s'il a un sens.
+        p = f.get("places")
+        if isinstance(p, int) and not isinstance(p, bool) and 0 < p < 1000:
+            ligne["places"] = p
+        forms.append(ligne)
     ferms, cids = [], set()
     for f in (d.get("fermetures") or [])[:1000]:
         if not isinstance(f, dict):
@@ -214,6 +222,10 @@ def enregistrer():
         v = int(actuel.get("version", 0)) + 1
         _ecrire({"version": v, "modifie": datetime.now().astimezone().isoformat(), **propre})
     return jsonify({"version": v})
+
+
+import groupes as _groupes  # noqa: E402
+app.register_blueprint(_groupes.ecran)
 
 
 if __name__ == "__main__":

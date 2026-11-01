@@ -7,3 +7,7 @@ node_modules/
 
 # Archive à déposer sur Hostinger, refaite à la demande
 livrables/
+
+# Données et clés du serveur : jamais dans le dépôt
+planeo/donnees/
+compte-google.json
